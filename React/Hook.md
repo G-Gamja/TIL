@@ -1,4 +1,9 @@
-# State Hook [리액트 쿡북](https://ko.reactjs.org/docs/hooks-overview.html)
+# Hook [리액트 쿡북](https://ko.reactjs.org/docs/hooks-overview.html)
+
+
+# State Hook
+
+함수형 컴포넌트에서 state변수를 관리할 수 있는 훅이다  
 
 ```javascript
 import React, { useState } from 'react';
@@ -16,23 +21,100 @@ function Example() {
     </div>
   );
 }
-```
+```  
+첫번째 인자: state 변수, 함수 호출 시 입력한 인수로 initialize됨  
+두번째 인자: state 변수를 변경할 수 있는 함수.
 
-응용 예제
+## 여러개의 useState 훅 사용하기
+
+리액트는 훅이 호출된 순서를 기억하기 때문에 여러개의 훅을 사용해도 괜찮다
+```javascript
+import React, { useState } from 'react';
+
+function Example() {
+
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState('');
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+      <button onClick={(e) => setName(e)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```  
+## 훅 하나로 여러 state변수를 관리하기
+두개의 state변수, 상태값을 하나의 객체로 관리할수도 있다
+```javascript
+import React, { useState } from 'react';
+
+function Example() {
+
+  const [profile, setProfile] = useState({name:'',age:0});
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <input type="text" value={state.name} onClick={e => setProfile({...profile, name: e.currenttarget.value})}>
+        이름
+      </input>
+      <input type="number" value={state.age} onClick={e => setProfile({...profile, age: e.currenttarget.value})}>
+        숫자
+      </input>
+    </div>
+  );
+}
+```  
+
+
+useState 응용 예제
 =====
 1.`useState` & 유저입력 저장(onChange) with input=text  
 https://wonyoung2257.tistory.com/4  
 실제로 구현에 참고한 것  https://react.vlpt.us/using-typescript/03-ts-manage-state.html
 
-# `Effect Hook `
+# `Effect Hook `| 함수형 컴포넌트에서 생명주기 함수 사용하기
 `useEffect()` 함수는 React component가 렌더링 될 때마다 `특정 작업(Sied effect)`을 실행할 수 있도록 하는 리액트 Hook입니다.
 
-데이터 가져오기, 구독(subscription) 설정하기, 수동으로 React 컴포넌트의 DOM을 수정하는 것까지 이 모든 것이 side effects입니다. 이런 기능들(operations)을 side effect(혹은 effect)라 부르는 것이 익숙하지 않을 수도 있지만, 아마도 이전에 만들었던 컴포넌트에서 위의 기능들을 구현해보았을 것입니다.
+API를 호출하고 해제하는 기능의 함수를 하나로 묶어서 관리할 수 있도록 해준다.
+데이터 가져오기, 구독(subscription) 설정하기, 수동으로 React 컴포넌트의 DOM을 수정하는 것까지 이 모든 것이 side effects입니다. 이런 기능들(operations)을 side effect(혹은 effect)라 부르는 것
 
+## 예시: 이펙트 훅에서 api호출하기
+count는 api결과값을 저장할 상태값  
+api결과 값을 setCount를 통해 count상태값에 저장->  
+이때 훅에 입력된 함수는 렌더링시에만 호출되기 때문에 api통신이 불필요하게 일어나게 된다=> 훅의 두번째 매개변수로 값이 입력된 배열을 줌으로써 그 값(count)이 변경될때만 이팩트를 호출하도록 설정한다
+```javascript
+const [count, setCount] = useState(0);
+useEffect(() => {
+  setCount(1)
+}, [count]);
+```
+## 예시: 훅을 통해 이벤트 처리함수를 등록하고 해제하기
+1. 창 크기가 변경될때마다 onResize 함수가 호출되도록 등록한다
+2. 이펙트 훅의 첫번째 매개변수에 등록된 함수가 또 다른 함수를 반환할 수 있다  
+    반환된 함수는 컴포넌트가 unmount || 첫번째 매개변수 함수(이펙트 함수,addListener)가 호출되기 직전에 호출된다
+3. 빈 배열을 넣음  
+    1.컴포넌트가 마운트될 때에만 첫번째 매개변수 함수(이팩트 함수) 호출
+    2.컴포넌트가 언마운트될 때에만 반환 함수(cleanup함수) 호출
+```javascript
+const [width, setWidth] = useState(window.innerWidth);
+useEffect(() => {
+  const onResize = ()=> setWidth(window.innerWidth);
+  window.addEventListener('resize',onResize);//1
+  return ()=>{//2
+    window.removeEventListener('resize',onResize);
+  };
+}, []);//3
+```
 ## useEffect()의 구조  
 기본 형태:  
 `useEffect(function,deps)`
-- 함수: 수행하고자 하는 작업
+- 함수: 수행하고자 하는 작업 | 렌더링 결과가 실제 돔에 반영된 후 호출된다  
+    버튼을 클릭할 때마다 다시 렌더링되고-> 렌더링이 끝나면 훅에 입력된 함수가 실행된다
 - deps(dependency): 배열 형태로 할당되며, 배열안에는 검사하고자 하는 특정 값 혹은 빈 배열을 할당하게 된다. 물론 할당하지 않아도 된다  
 
 ### 컴포넌트가 마운트 되었을 때 (첫 렌더링 시점)    
