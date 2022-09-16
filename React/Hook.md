@@ -1,6 +1,10 @@
 # Hook [리액트 쿡북](https://ko.reactjs.org/docs/hooks-overview.html)
 
+## How to type Hook
+https://devtrium.com/posts/react-typescript-how-to-type-hooks
 
+## useState훅 사용 예
+https://velog.io/@velopert/using-hooks-with-typescript
 # State Hook
 
 함수형 컴포넌트에서 state변수를 관리할 수 있는 훅이다  
@@ -69,7 +73,33 @@ function Example() {
   );
 }
 ```  
+useState에 타입 지정하기
+======
+https://velog.io/@jjburi/TypeScript-useState%EC%97%90%EC%84%9C-type-%EC%A7%80%EC%A0%95
 
+
+
+## 방법 1 `useState<number>()`
+`useState<number>()`
+state변수의 타입을 정해주고 싶다면 위와 같이 Generic안에 타입을 정해준다
+```typescript
+type IUserInfo = {
+  userid: string | undefined;
+  username: string | undefined;
+}
+const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+```
+## 방법 2 state변수가 구조를 가진 `객체` || `배열`
+```typescript
+type Todo = { id: number; text: string; done: boolean };
+const [todos, setTodos] = useState<Todo[]>([]);
+```
+
+상태변수 초기값 설정할 때 any[] 할당했다고 오류뜨면 as ~ 
+```typescript
+  const [userList, setUserList] = useState<userDataSetModel[]>(fetchedData ? (JSON.parse(fetchedData) as userDataSetModel[]) : []);
+```
+ 사용된 as 는 Type Assertion 이라는 문법인데요, 특정 값이 특정 타입이다라는 정보를 덮어 쓸 수 있는 문법입니다. 
 
 useState 응용 예제
 =====
