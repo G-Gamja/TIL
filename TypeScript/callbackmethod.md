@@ -54,3 +54,34 @@ introduce("홍", "길동", function(name) {
     *   하나를 실행시킨 후 응답이 올떄까지 모든 프로세스가 멈추기 때문에 응답이 오기전까지 안기다리고 그 다음꺼를 미리 해버리는 식
  
  ## 사용 예: 이벤트 핸들러
+
+
+## 에러
+```
+const getUserInputDataFunc = (oname: string) => {
+    // 근데 이건 왜 스테이트값이 안바뀌지? 골때리네
+    // console.log('이전입니다');
+    // console.log(name);
+    // setEditName(name);  여기서 상태변수인 state가 변해야 하는데 변하지가 않았음
+    // console.log('이후입니다');
+    // console.log(editName);
+    // console.log(name);
+    const userInputTextData = { name: oname };
+    userList.map((e, index) => (index === editIndex ? userList.splice(index, 1, userInputTextData) : null));
+    // setUserList에 상태값 그 잡체를 그대로 넘기면 내가 원하는대로 바로 반영안되는거였음
+    const copiedList = [...userList];
+    setUserList(copiedList);
+    window.localStorage.setItem('account', JSON.stringify(userList));
+  };
+```
+```
+<Dialog mainText="Rename account" accountName={editName} onCancel={onCancel} callback={getUserInputDataFunc} />
+```
+
+이건 자식 컴포넌트로 넘긴 콜백 함수
+```
+  const onSubmit = () => {
+    callback(userInputName);
+    setEditName('');
+    onCancel();
+  };```

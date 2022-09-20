@@ -54,6 +54,8 @@ function Example() {
 ```  
 ## 훅 하나로 여러 state변수를 관리하기
 두개의 state변수, 상태값을 하나의 객체로 관리할수도 있다
+
+https://velog.io/@unknown9732/useState-%EC%97%AC%EB%9F%AC%EA%B0%9C%EB%A5%BC-%EC%93%B0%EB%8A%94-%EA%B2%BD%EC%9A%B0
 ```javascript
 import React, { useState } from 'react';
 
@@ -93,6 +95,7 @@ const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
 ```typescript
 type Todo = { id: number; text: string; done: boolean };
 const [todos, setTodos] = useState<Todo[]>([]);
+//Todo배열... / 그냥 배열이 아닌 Todo객체로 넘길거면 배열괄호 안써도 됨
 ```
 
 상태변수 초기값 설정할 때 any[] 할당했다고 오류뜨면 as ~ 
