@@ -13,3 +13,10 @@ const [userList, setUserList] = useState<userDataSetModel[]>(fetchedData ? (JSON
     window.localStorage.setItem('account', JSON.stringify(userList));
   };
   ```
+
+  ## useRef 훅 에러
+
+  ### forwarded ref
+  https://www.carlrippon.com/react-forwardref-typescript/
+
+  https://ko.reactjs.org/docs/forwarding-refs.html

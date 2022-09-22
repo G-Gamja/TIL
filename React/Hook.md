@@ -56,7 +56,7 @@ function Example() {
 두개의 state변수, 상태값을 하나의 객체로 관리할수도 있다
 
 https://velog.io/@unknown9732/useState-%EC%97%AC%EB%9F%AC%EA%B0%9C%EB%A5%BC-%EC%93%B0%EB%8A%94-%EA%B2%BD%EC%9A%B0
-```javascript
+```typescript
 import React, { useState } from 'react';
 
 function Example() {
@@ -75,6 +75,15 @@ function Example() {
   );
 }
 ```  
+클래스형 컴포넌트의 setState메서드는 기존의 값과 입력된 값을 병합하지만
+useState훅은 이전 상태값을 지우기 때문에 스프레드가 들어가야한다
+
+https://ko.reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables
+```  typescript 
+const [editData, setEditData] = useState({ name: '', indexVal: 0 }); 
+// "... state"를 spread 하여 name, indexVal가 "손실"되지 않음
+setEditData({ ...editData, name: inputname, indexVal: inputindex });
+```
 useState에 타입 지정하기
 ======
 https://velog.io/@jjburi/TypeScript-useState%EC%97%90%EC%84%9C-type-%EC%A7%80%EC%A0%95
@@ -236,6 +245,109 @@ deps부분을 생략한다면 해당 컴포넌트가 렌더링 될 때마다 use
     console.log("맨 처음 렌더링될 때 한 번만 실행");
   },[]);
 ```
+## useRef Hook: 특정 DOM에 접근해야 할 때
+-----------
+리액트를 사용하는 프로젝트에서도 가끔씩 DOM 을 직접 선택해야 하는 상황이 발생 할 때도 있습니다. 예를 들어서 특정 엘리먼트의 크기를 가져와야 한다던지, 스크롤바 위치를 가져오거나 설정해야된다던지, 또는 포커스를 설정해줘야된다던지 등 정말 다양한 상황이 있겠죠. 추가적으로 Video.js, JWPlayer 같은 HTML5 Video 관련 라이브러리, 또는 D3, chart.js 같은 그래프 관련 라이브러리 등의 외부 라이브러리를 사용해야 할 때에도 특정 DOM 에다 적용하기 때문에 DOM 을 선택해야 하는 상황이 발생 할 수 있습니다.  
+이때 `ref`를 사용한다.
+
+```javascript
+//버튼 클릭시 인풋창에 포커스가 가도록 하는 예시
+const nameInput = useRef();
+//onReset실행시 ref가 가리키는 돔에 포커스
+ const onReset = () => {
+    // .current를 통해 해당 돔에 접근
+    nameInput.current.focus();
+  };
+<input
+        name="name"
+        placeholder="이름"
+        onChange={onChange}
+        value={name}
+        ref={nameInput}//이렇게 ref필드에 할당
+      />
+```
+`useRef()` 를 사용하여 Ref `객체를` 만들고, 이 객체를 우리가 선택하고 싶은 `DOM` 에 `ref` 값으로 설정해주어야 합니다. 그러면, Ref 객체(여기서는 nameInput)의 .``current`` 값은 우리가 원하는 DOM 을 가르키게 됩니다.
+
+ref는 아무리 컴포넌트가 렌더링되어도 값을 유지한다. 왜냐하면 이 값은 컴포넌트의 전 생애주기를 통해 유지되기 떄문
+즉 컴포넌트가 마운트~언마운트까지 같은 값을 유지할 수 있음
+### 부모가 자식의 ref를 받아내야 할 때
+### `forwardedRef`
+https://fettblog.eu/typescript-react-generic-forward-refs/  
+https://ko.reactjs.org/docs/forwarding-refs.html   쿡북  
+
+
+https://merrily-code.tistory.com/121
+
+
+```javascript
+return (
+    <div className="App">
+      <header className="App-header">
+      // 컴포넌트에 직접 ref를 달아줌
+        <CustomInput
+          type="text"
+          ref={nameRef} // 여기
+          onKeyDown={onKeyDown}
+          placeholder="이름을 입력하세요"
+        ></CustomInput>
+        <button ref={submitRef} onKeyDown={submitKeyDown}>
+          제출
+        </button>
+      </header>
+    </div>
+  );
+}
+```
+ref를 통해  `<CustomInput/>` 를 조작하려 하면 null값을 참조하려 했다는 오류가 발생!
+
+### 원인 - 함수 컴포넌트는 ref가 존재하지 않음
+
+ref값은 노드의 유형에 따라 다르다
+* ref 속성이 html엘리먼트에 쓰였다면, 생성자에서 React.createRef()로 생성된 ref는 자신을 전달받은 dom엘리먼트를 current 프로퍼티 값으로 받는다.
+* ref 속성이 커스텀 `클래스`컴포넌트에 쓰였다면, ref 객체는 마운트된 컴포넌트의 인스턴스를 current 프로퍼티 값으로서 받습니다.
+* 함수 컴포넌트는 인스턴스가 없기 때문에 함수 컴포넌트에 ref 속성을 사용할 수 없음
+
+then ref를 통해 함수 컴포넌트를 직접 제어하는건 불가능일까?
+
+=> `React.forwardRef` 를 통해 해결
+`React.forwardRef`를 사용하면 부모 컴포넌트로 -> 하위 컴포넌트로 ref전달 가능  
+이렇게 전달받은 ref를 html 요소의 속성으로 넘겨줌으로써 함수 컴포넌트도 ref를 통해 돔의 제어가 가능해짐
+
+```typescript
+// props 목록 뒤에 ref를 별도로 전달받는 모습입니다.
+const CustomInput = React.forwardRef(({ type, onKeyDown, placeholder }, ref) => {
+  return (
+    <input
+      type={type}
+      onKeyDown={onKeyDown}
+      placeholder={placeholder}
+      // 전달받은 ref는 HTML 속성으로 전달됩니다.
+      ref={ref}
+    ></input>
+  );
+});
+export default CustomInput;
+
+// 커스텀한 입력 컴포넌트
+<CustomInput
+  type="text"
+  ref={nameRef} // 함수 컴포넌트는 ref가 존재하지 않음!
+></CustomInput>
+
+// 기본 형태
+// forwardRef로 컴포넌트를 감싼 모습
+const CustomInput = React.forwardRef({ type }, ref) => {
+  return (
+    <input
+      type={type}
+      // 전달받은 ref는 HTML 속성으로 전달됩니다.
+      ref={ref}
+    ></input>
+  );
+});
+
+```
+export default CustomInput;
 
 ## 사용 규칙
 Hook 사용 규칙

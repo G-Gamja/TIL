@@ -16,6 +16,9 @@ if (!visible) return null;
 2. 애초에 컴포넌트 부를때 불리언 값이랑 같이
 
 # 다이얼로그 바깥 영역 클릭시 사라지게 하기 : out side click
+
+* click은 마우스 버튼을 `눌렀다 놓았을 때` 시작합니다.  
+* mousedown는 버튼을 `처음 누르는 순간` 시작됩니다.
 # 리액트의 컴포넌트의 외부 영역의 클릭을 감지
 https://sezzled.tistory.com/147  
 https://chach4.tistory.com/4
