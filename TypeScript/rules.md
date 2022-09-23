@@ -10,3 +10,7 @@
 <MainContainer mainText="Create a new account" onClick={() => goAccount()} />
 
 ```
+## 타입 선언시
+type userDataSetModel = { name: string };
+
+는 함수 밖에서 선언할 것, 그리고 타입은 대문자로 시작
