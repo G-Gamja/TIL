@@ -1,4 +1,9 @@
-https://wikidocs.net/160308
+https://wikidocs.net/160308  
+
+
+이거를 추천함  
+
+https://jeonghwan-kim.github.io/js/2017/05/15/webpack.html
 
 웹팩은 모듈 번들러이다. 모듈은 각 리소스 파일을 말하고, 번들은 웹팩 실행후에 나오는 결과 파일이다. 하나의 번들 파일은 여러 모듈로 만들어진다  
 

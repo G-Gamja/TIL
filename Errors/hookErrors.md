@@ -17,6 +17,64 @@ const [userList, setUserList] = useState<userDataSetModel[]>(fetchedData ? (JSON
   ```
 
   ## useRef 훅 에러
+      // TODO 현재 커스텀훅에서 직접 onClose,onOpen 실행시키면 작동을 안함
+    // 아마 다른 컴포넌트에서 다른 상태변수를 작동시켜서 부모에 있는 상태 변수를
+    // 조작해서 껏다 켰다 해야하는데 이름만 같은 자식의 상태변수를 조작하면 작동 안걸림
+    // forwardedref를 사용해서 해결해보자
+
+    문제상황: 부모 , 자식 따로 커스텀훅을 발동시키고 커스텀훅을 통해서 자식의
+    disable여부를 결정함 근데 자식에서 선언한 커스텀훅을 통해서는 on/off가 안됨
+    => 커스텀 훅은 독립적으로 선언되기 때문, 즉 부모에서 선언한 상태변수랑 
+    자식에서 선언한 자식의 커스텀 훅의 상태변수랑 다른거임 자식의 커스텀훅을 통해 상태변수 업데이트를 해도 그건 자식의 상태변수를 수정한거기때문에 부모에서 선언해서 부모에서 사용중인 상태변수는 업데이트가 안된것임
+    => 그냥 부모에서 자식에게로 커스텀 훅의 함수를 넘기자  
+
+    문제상황2: 마찬가지로 자식, 부모의 상태변수가 다르기 때문에 useRef또한 서로 다른 것+상태변수가 서로 다름의 연동으로 다이얼로그 외부를 클릭해도 안나가짐
+    ==> 부모에서 선언한 커스텀 훅의 ref값을 forwardRef로 자식에게 전달해서 자식의 레퍼런스를 받아서 부모에서 외부클릭 여부를 처리하자
+``` typescript 
+부모에서 선언된 상태변수를 통해 자식 컴포넌트의 visible을 컨트롤 하는 모습
+<부모>
+
+ {dialog.isDialog && (
+        <Dialog mainText="Rename account" accountName={user.editData.nameVal} onCancel={dialog.onClose} callback={user.editMethod} ref={dialog.dialogRef} />
+      )}
+      <부모>
+```
+
+```typescript 
+선언형 함수의 forwardRef 사용법
+function Dialog({ mainText, accountName, onCancel, callback }: DialogProps, ref: React.LegacyRef<HTMLDivElement> | undefined) {
+  const userInput = useInput();
+  const dialogg = useDialog();
+
+  const onSubmit = () => {
+    callback(userInput.userName);
+    onCancel();
+  };
+  return (
+    <div className={styles.background}>
+      <div className={styles.dialogContainer} ref={ref}>
+        <div className={styles.topHeader}>
+          {mainText}
+          <div className={styles.iconButton}>
+            <IconButton onClick={onCancel}>
+              <Close />
+            </IconButton>
+          </div>
+        </div>
+        <div className={styles.mainContainer}>
+          <input type="text" className={styles.inputBox} value={userInput.userName} onChange={userInput.onChange} placeholder={accountName} />
+          <button type="button" className={styles.footerSummitButton} disabled={userInput.userName === ''} onClick={onSubmit}>
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+const DDialog = React.forwardRef(Dialog);
+export default DDialog;
+
+```
 
   ### forwarded ref
   https://www.carlrippon.com/react-forwardref-typescript/
