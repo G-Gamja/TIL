@@ -21,8 +21,10 @@ if (!visible) return null;
 * mousedown는 버튼을 `처음 누르는 순간` 시작됩니다.
 # 리액트의 컴포넌트의 외부 영역의 클릭을 감지
 https://sezzled.tistory.com/147  
-https://chach4.tistory.com/4
+https://chach4.tistory.com/4  
 
+!유의할 점  
+중요한 건 이때 사용자의 행동을 오직 다이얼로그에만 가능하게 하도록 하는 것이 중요하기 때문에 다이얼로그 이외의 모든 페이지 영역이 외부클릭으로 인식할 수 있도록 한다.
 ## 이벤트 버블링과 버튼 바깥 영역 클릭시 사라지게 하기
 https://velog.io/@miyoni/TIL37 // 개념 정리가 잘 되어있음
  
