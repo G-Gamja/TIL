@@ -1,0 +1,6 @@
+# messaging
+
+공식 홈페이지: https://developer.chrome.com/docs/extensions/mv3/messaging/
+
+
+우리는 직접 content.js파일에 접근할 수 없음. 그래서 우리는 Message Passing이라는 방식을 사용해야함

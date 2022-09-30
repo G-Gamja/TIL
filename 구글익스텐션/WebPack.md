@@ -25,3 +25,7 @@ https://jeonghwan-kim.github.io/js/2017/05/15/webpack.html
 ## 플러그인
 
 로더는 특정 모듈에만 적용이 가능하지만 플러그인은 웹팩이 실행되는 전체 과정에 개입할 수 있다.
+
+## INLINE_RUNTIME_CHUNK=false
+
+INLINE_RUNTIME_CHUNK=false disabled webpack generating inline JavaScript in HTML. Normally webpack will put its own runtime into HTML inline script. But inline script is not allowed by browser extension.
