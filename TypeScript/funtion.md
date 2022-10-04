@@ -26,4 +26,7 @@ onClick={submitAccountName}
 
 첫번쨰는 함수를 실행이 아니라 그냥 전달이고
 아래는 실행이라 온클릭시에 실행이 아니고 그냥 바로 실행시킨다는 의미
-괄호를 달면 실행을 시킨다는 의미이다
+괄호를 달면 실행을 시킨다는 의미이다  
+
+호출과 참조:
+https://velog.io/@silverj-kim/Javascript-%ED%95%A8%EC%88%98Function
