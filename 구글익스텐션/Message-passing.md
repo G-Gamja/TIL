@@ -8,6 +8,7 @@
 
 보내는쪽: sendMessage  
 
+메서드에 대한 설명과 파라미터들에 대한 설명
 https://developer.chrome.com/docs/extensions/reference/runtime/#method-sendMessage
 
 
