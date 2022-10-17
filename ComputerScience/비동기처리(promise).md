@@ -241,3 +241,5 @@ async function loadJson(url) { // (1)
 loadJson('no-such-user.json')
   .catch(alert); // Error: 404 (4)
 ```
+# Promise 와 async,await차이
+https://velog.io/@pilyeooong/Promise%EC%99%80-asyncawait-%EC%B0%A8%EC%9D%B4%EC%A0%90

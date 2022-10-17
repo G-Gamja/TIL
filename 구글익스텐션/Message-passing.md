@@ -12,14 +12,14 @@
 
 메서드에 대한 설명과 파라미터들에 대한 설명
 https://developer.chrome.com/docs/extensions/reference/runtime/#method-sendMessage
-
+```javascript
 chrome.runtime.sendMessage(
     // 메시지를 보낼 확장 프로그램/앱의 ID
-    // 생략 시 메시지는 익스텐션으로 간다
+    // 생략 시 메시지는 본인(익스텐션)으로 간다
   extensionId?: string,
   message: any,
   options?: object,
   callback?: function,
 )
-
+```
 받는 쪽: runtime.onMessage 이벤트 리스너로 들어온 메시지를 핸들링할 수 있다.
