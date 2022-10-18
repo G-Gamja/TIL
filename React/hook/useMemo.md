@@ -8,8 +8,20 @@
 예를들어 state,props가 여러가지라면?
 state1, state2, state3이 존재하는 상태에서 state1을 변경시켜주었는데 state2, state3도 재계산된다면??
 이것이 과연 좋은 rerendering일까요??
+```javascript
+function MyComponent({ x, y }) {
+  const z = useMemo(() => compute(x, y), [x, y]);
+  return <div>{z}</div>;
+}
+```
+x와 y 값이 이 전에 랜더링했을 때와 동일할 경우, 이 전 랜더링 때 저장해두었던 결과값을 재활용합니다.   
+하지만, x와 y 값이 이 전에 랜더링했을 때와 달라졌을 경우, () => compute(x, y) 함수를 호출하여 결과값을 새롭게 구해 z에 할당해줍니다.
+* x,y를 주시하다가 값이 변경되면 -> compute함수를 실행
+*                변경되지 않으면 -> 이전 계산된 값을 실행 
 
-참조: https://velog.io/@kysung95/%EC%A7%A4%EB%A7%89%EA%B8%80-useMemo
+
+참조: https://velog.io/@kysung95/%EC%A7%A4%EB%A7%89%EA%B8%80-useMemo  
+참조: https://www.daleseo.com/react-hooks-use-memo/
 ## 디버깅시
 훅을 태스트하기 위해 디버깅으로 콘솔로그를 찍어볼 수 가 있는데
 이때 두번 찍히는 이유는 `컴포넌트의 내용이 업데이트 되면 기존의 값을 언마운트하고 새로 값을 쓰니까 두번씩 찍히는 것
