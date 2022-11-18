@@ -1,0 +1,1 @@
+참고: https://docs.cosmos.network/v0.47/basics/tx-lifecycle
