@@ -35,6 +35,38 @@ event.target은 실제 이벤트가 시작된 타깃 요소이다. 버블링이 
 event.currentTarget(=this)는 현재 요소로, 현재 실행중인 핸들러가 할당된 요소를 참조한다.
 큰 틀 중에서도 가장 안쪽에 있는 요소가 event.target라면, 이 요소를 감싸는 큰 틀이 event.currentTarget(=this)라고 할 수 있겠다.
 
+## 다이얼로그 선택 된 놈이 중앙으로 오도록 자동으로 보여주는거 
+```typescript  
+
+CoinOrTokenPopover({
+  coinOrTokenInfos,
+  currentCoinOrTokenInfo,
+  onClickCoinOrToken,
+  onClose,
+  address,
+  chain,
+  ...remainder
+}: CoinOrTokenPopoverProps)
+
+const ref = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (remainder.open) {
+      setTimeout(() => ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
+    }
+  }, [remainder.open]);
+
+  <CoinButton
+  type="button"
+  key={item.baseDenom}
+  data-is-active={isActive ? 1 : 0}
+  ref={isActive ? ref : undefined}
+  onClick={() => {
+    onClickCoinOrToken?.(item);
+    onClose?.({}, 'backdropClick');
+  }}
+            >```
+
 ## 내가 겪었던 에러들
 
 나랑 비슷, 대부분 해결됨
