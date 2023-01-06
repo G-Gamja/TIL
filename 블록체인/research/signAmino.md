@@ -1,0 +1,1 @@
+https://docs.cosmos.network/main/core/encoding
