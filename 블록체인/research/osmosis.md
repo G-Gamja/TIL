@@ -48,7 +48,7 @@ https://github.com/cosmology-tech/cosmology/tree/main/packages/core#swapexactamo
   const a = new Dec(amount);
   const b = new Dec(100).sub(new Dec(slippage)).quo(new Dec(100));
   // Number(amount) * ((100 - slippage) / 100);
-  return a.mul(ㄴb).toString();
+  return a.mul(b).toString();
 };
 ```
 해당 파일: https://github.com/cosmology-tech/cosmology/blob/2f80fdea0b3e846de6fd62f3d3c20da63c36e5bc/packages/core/src/utils/osmo/utils.ts
@@ -78,6 +78,62 @@ arbitrage bots swoop in to buy the underpriced Asset B for selling in other mark
 우선 weight는 검증인의 전체 스테이킹 어마운트를 의미함  
 The measure of a validator's total stake. Validators with higher weights get selected more often to propose blocks. A validator's weight is also a measure of their voting power in governance.
 
+여기서는 스케일의 의미를 가짐
+
+/** Estimate min amount in given a pool with asset weights or reserves with scaling factors. (AKA weighted, or stable.) */
+
+# Price impact
+
+변환 후의 코인의 가격에 가해질 영향
+
+오스모 -> 코스모 일때
+오스모 변환전 가격이 7573불이고 아톰이 5965불이면 26%나 아톰 가격이 박살(임팩트를)을 주는 거임
+
+Price impact is the influence of user's individual trade over the market price of an underlying asset pair. It is directly correlated with the amount of liquidity in the pool /    Automated Market Maker (AMM). Price impact can be especially high for illiquid markets/pairs, and may cause a trader to lose a significant portion of their funds. 
+
+https://help.1inch.io/en/articles/4585109-what-is-price-impact-vs-price-slippage-in-defi
+# Swap rate - osmosis-front
+```typescript
+// quo는 나누기 연산자를 의미함
+
+// WeightedPoolMath from @osmosislab-math
+// https://github.com/osmosis-labs/osmosis-frontend/tree/master/packages/math#readme
+// https://github.com/osmosis-labs/osmosis-frontend/blob/master/packages/math/src/pool/weighted.ts
+
+
+// Dec 클래스 from @keplr-waller/unit
+// npm i @keplr-wallet/unit
+const oneDec = new Dec(1);
+
+export function calcSpotPrice(
+  tokenBalanceIn: Dec,
+  tokenWeightIn: Dec,
+  tokenBalanceOut: Dec,
+  tokenWeightOut: Dec,
+  swapFee: Dec
+): Dec {
+  const number = tokenBalanceIn.quo(tokenWeightIn);
+  const denom = tokenBalanceOut.quo(tokenWeightOut);
+  const scale = oneDec.quo(oneDec.sub(swapFee));
+
+  return number.quo(denom).mul(scale);
+}
+
+beforeSpotPriceInOverOut = WeightedPoolMath.calcSpotPrice(
+      new Dec(inPoolAsset.amount),
+      new Dec(inPoolAsset.weight),
+      new Dec(outPoolAsset.amount),
+      new Dec(outPoolAsset.weight),
+      swapFee ?? this.swapFee
+    );
+
+
+
+ const effectivePrice = new Dec(tokenInAmount).quo(new Dec(tokenOut.amount));
+    const priceImpact = effectivePrice
+      .quo(beforeSpotPriceInOverOut)
+      .sub(new Dec("1"));
+```
 # 오스모시스-타 토큰과의 교환비율
 두 토큰이 있는 해당 유동성풀에 있는 두 토큰의 amount비율이 그것이다.
 
@@ -95,6 +151,17 @@ The measure of a validator's total stake. Validators with higher weights get sel
 api설명서 공식 홈피: https://docs.osmosis.zone/api?v=LCD#/operations/EstimateSwapExactAmountIn
 
 # osmosis 프론트
+
+    // const integer = weightRatio.truncate();
+    // const fractional = minus(weightRatio,integer);
+
+    // const integerPow = powInt(y, integer);
+
+    // const fractionalPow = powApprox(base, fractional, powPrecision);
+
+    // const www =  integerPow.mul(fractionalPow);
+
+    // https://github.com/osmosis-labs/osmosis-frontend/blob/98abaeb2cd72666a63717bf468099190a49df9e3/packages/math/src/utils.ts#L8
 
 - estimate들(estimateswapexactin도 포함)
     https://github.com/osmosis-labs/osmosis-frontend/blob/5372259aed83cbe99e261606eec84ce981418c57/packages/math/src/pool/estimates.ts 

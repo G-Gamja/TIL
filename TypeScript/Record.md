@@ -4,4 +4,4 @@ https://developer-talk.tistory.com/296
 여기서 gasgas.data는 `Record<string,string>`이다
 ```typescript
 console.log(Object.keys(gasgas.data));
-```
+``` 
