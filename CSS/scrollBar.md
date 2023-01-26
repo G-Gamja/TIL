@@ -1,6 +1,14 @@
 ## 내용이 넘쳐날때/스크롤이 필요할때: `overflow: auto`  
 y축에만 적용  
 * overflow-y: scroll;
+
+![오버플로우](/images/overFlow.png)
+
+
+다른 child 컴포넌트의 높이를 고려하여 overflow하는법 - 굳이 height안줘도 됨
+
+부모 - display:flex, column으로 해주고 아래 자식 컴포넌트에 그냥 overflow:auto하면됨
+
 ## 스크롤바 디자인하기
 * ::-webkit-scrollbar : 스크롤바 영역에 대한 설정
 * ::-webkit-scrollbar-thumb : 스크롤바 막대에 대한 설정

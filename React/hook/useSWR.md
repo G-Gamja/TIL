@@ -21,7 +21,8 @@ Normally, when you enabled suspense it's guaranteed that data will always be rea
 - Suspense mode suspends rendering until the data is ready
 
 _ ### 옵션 목록
-_ 
+    _ 참고: https://swr.vercel.app/ko/docs/api 
+
 _ suspense = false: React Suspense 모드를 활성화 (상세내용) 
 _ fetcher(args): fetcher 함수   
 _ revalidateIfStale = true: stale 데이터가 존재할 경우 마운트시에 자동으로 갱신 (상세내용)
