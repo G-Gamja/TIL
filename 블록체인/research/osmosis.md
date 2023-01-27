@@ -284,3 +284,11 @@ External Incentivize Pool (보상 : OSMO, MED)
 MED-OSMO, MED-ATOM 풀에 LP를 예치하면, OSMO뿐만 아니라 MED를 추가적으로 받을 수 있습니다. 이 풀은 메디블록측에서 오스모시스의 유동성을 확보하기 위하여 마련한 기간 한정 풀입니다. 이 풀은 Incentivized Pool 에 등록이 정상적으로 완료된 이후, 신규 프로포절 등록 및 승인 이후에 가능해집니다. 정상적으로 External Incentivize Pool 오픈 시, 공지로 안내해 드릴 예정입니다.
 
 참조: https://blog.medibloc.org/timeline/notice/18293
+
+# Stabl Swap이란
+사용된 수식들에 대한 자세한 설명: https://github.com/osmosis-labs/osmosis/blob/main/x/gamm/pool-models/stableswap/README.md
+
+참고: https://osmosis.zone/blog/osmosis-dex-stableswap
+
+    - scaling factor란
+    - One exciting novel feature of Osmosis stableswap is a “scaling factor” for the curve. This factor allows the curve to adjust to predictable price changes, such as the value accruing to a liquid staking token when staking rewards are passed on. In other words, as stATOM distributes ATOM staking rewards to its holders, 1 stATOM will probably start to be worth 1.01 ATOM, then 1.02 ATOM, and so on. The scaling factor can take this predictably shifting peg into account.
