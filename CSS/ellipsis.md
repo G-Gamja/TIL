@@ -20,3 +20,20 @@ export const SwapCoinAmountContainer = styled('div')({
   },
 });
 ```
+
+한줄라인 글자수 제한
+한줄 라인 글자수 를 제한하는 방법은 아래와 같습니다.
+```
+ <div class="txt_line">통영의 신흥보물 강구안의 동쪽벼랑인 동피랑의 벽화마을을 다녀왔다</div>
+ .txt_line {
+      width:70px;
+      padding:0 5px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+  }
+```
+Block레벨 테그에서만 적용됨.
+overflow:hidden : 넓이가 70px를 넒어서는 내용에 대해서는 보이지 않게 처리함
+text-overflow:ellipsis : 글자가 넓이 70px를 넘을 경우 생략부호를 표시함
+white-space:nowrap : 공백문자가 있는 경우 줄바꿈하지 않고 한줄로 나오게 처리함 (\A로 줄바꿈가능)
