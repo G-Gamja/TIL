@@ -13,17 +13,31 @@ content-type: application/json
 }
 
 여기서 이제 https://docs.infura.io/infura/networks/ethereum/json-rpc-methods
+- https://www.quicknode.com/docs/ethereum/eth_getBalance
 json-rpc메서드 문서 보면서 메서드명이랑 알맞은 파라미터 전달해서 직접 통신해볼 수 있다.
 
 예시2 - http로 날려보기 
 
-POST https://polygon-rpc.com/
+POST https://rpc-evmos-app.cosmostation.io
 content-type: application/json
-
+```json
+// http
+POST https://rpc-evmos-app.cosmostation.io
+content-type: application/json
 {
     "jsonrpc": "2.0",
-    "method": "eth_blockNumber",
+    "method": "eth_getBalance",
     "params": [
+        "0xA9b4823ec2718Fb09BD5FC21323B2BE5DD0aDDf6","latest"
     ],
-    "id": 0
+    "id": 1
 }
+```
+- response
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": "0x1bc16d674ec80000"
+}
+```

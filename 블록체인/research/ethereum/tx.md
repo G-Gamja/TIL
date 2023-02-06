@@ -45,5 +45,10 @@ json-rpc call
   ]
 }
 ```
+response 는 16진수로 값이 날라오는데 아래의 코드를 통해서 스트링값으로 받아올 수  있음
+  ```tsx 
+  // data.result는 16진수
+  const totalAmount = BigInt(data?.result || '0').toString();
+  ```
 
 참조: https://ethereum.org/ko/developers/docs/transactions/
