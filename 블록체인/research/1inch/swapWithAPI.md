@@ -99,3 +99,37 @@ curl -X 'GET' \
     - 주의할점
     - do not use estimatedGas from the quote method as the gas limit of a transaction
     - 리턴값의 estimatedGas을 gas limit값으로 그대로 사용하지는 말 것
+- 여기서 abi는 1inch의 스마트 컨트랙을 호출하여 어떤 값을 가져올 때 사용될 건데 우리는 swap api를 통해 tx에 넣을 콜 데이터를 바로 얻을 수 있기 때문에 굳이 필요하지 않을 듯 싶다
+
+샘플 코드
+
+```ts
+import * as ethers from 'ethers';
+
+const provider = new ethers.providers.InfuraProvider('homestead', 'Your_Infura_API_Key');
+const contractAddress = '0x1111111111111111111111111111111111111111';
+const abi = [{...}];  // ABI for the 1inch smart contract
+    
+async function swap(fromToken: string, toToken: string, amount: string) {
+    const [quote] = await fetch(`https://api.1inch.exchange/v1.1/quote?
+        from=${fromToken}&to=${toToken}&amount=${amount}`).then(res => res.json());
+        
+    const oneInchContract = new ethers.Contract(contractAddress, abi, provider);
+    const swapData = oneInchContract.interface.functions.swap.encode([
+        quote.results[0].path,
+        quote.results[0].to,
+        quote.results[0].value
+    ]);
+    
+    const wallet = new ethers.Wallet('Your_Private_Key', provider);
+    const tx = await wallet.sendTransaction({
+        to: contractAddress,
+        value: 0,
+        data: swapData
+    });
+    
+    console.log(`Transaction hash: ${tx.hash}`);
+    return tx;
+
+}
+```

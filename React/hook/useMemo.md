@@ -27,6 +27,7 @@ x와 y 값이 이 전에 랜더링했을 때와 동일할 경우, 이 전 랜더
   // STUB - 비동기 함수 사용시 useMemo와는 함꼐 사용하지 말것
   // https://stackoverflow.com/questions/65275188/how-to-use-the-react-hook-usememo-with-asynchronous-functions
 
+ -> useEffect와 useState를 활용할 것
 ## 디버깅시
 훅을 태스트하기 위해 디버깅으로 콘솔로그를 찍어볼 수 가 있는데
 이때 두번 찍히는 이유는 `컴포넌트의 내용이 업데이트 되면 기존의 값을 언마운트하고 새로 값을 쓰니까 두번씩 찍히는 것

@@ -18,3 +18,5 @@ The potential downside of using a DeFi aggregator is the gas fees. As Ethereum c
 
 While DeFi has certainly helped bring millions of new users to the cryptocurrency market, there are still users who are intimidated by the sheer number of protocols to choose from and industry-specific lingo. As a result, many crypto enthusiasts prefer to simply hold cryptocurrencies like Bitcoin (BTC) in a wallet without putting it to better use. With the advent of DeFi aggregators, new entries to the industry can benefit from DeFi without having to understand the technical complexities of trading, coding, blockchain, etc. An aggregator gives power to these new users and helps them make better trading decisions.
 In a decentralized economy such as this, it’s still important to centralize some aspects of DeFi for the sake of efficiency. DeFi aggregators bring together the best of both worlds of centralized organization strategies and decentralized finance protocols to create an important tool in this new, exciting industry. 
+
+

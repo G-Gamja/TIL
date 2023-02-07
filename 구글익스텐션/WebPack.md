@@ -26,6 +26,17 @@ https://jeonghwan-kim.github.io/js/2017/05/15/webpack.html
 
 로더는 특정 모듈에만 적용이 가능하지만 플러그인은 웹팩이 실행되는 전체 과정에 개입할 수 있다.
 
+## 폴리필,polyfill
+
+폴리필(Polyfill)은 최신 ECMAScript 환경을 만들어 준다. 바벨은 ES6 => ES5로 변환할 수 있는 것들만 변환을 하는데,
+
+ES6에서 비동기 처리를 위해 등장한 Promise와 같이 ES5에서 변환할 수 있는 대상이 없는 경우 에러가 발생한다.
+
+이러한 경우 우리는 Polyfill을 이용해서 이슈를 해결할 수 있다.
+
+참조: https://iancoding.tistory.com/175
+스택오버플로우: https://stackoverflow.com/questions/64557638/how-to-polyfill-node-core-modules-in-webpack-5
+
 ## INLINE_RUNTIME_CHUNK=false
 
 INLINE_RUNTIME_CHUNK=false disabled webpack generating inline JavaScript in HTML. Normally webpack will put its own runtime into HTML inline script. But inline script is not allowed by browser extension.
