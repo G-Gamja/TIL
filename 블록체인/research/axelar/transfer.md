@@ -28,7 +28,7 @@
   - 수수료는 어떤 체인을 거치느냐에 따라 하드코딩된 값을 사용하고 있음(ex. 오스모시스에서 이더리움으로 USDC를 보낼 때  오스모시스(0.1 USDC) + 이더리움(10.4 USDC) = 10.5 USDC)
 - 원문: If you plan on using the transfer assets functionality, it is paramount to take the relayer fees into account. Any deposits into a deposit address that are not in excess of this calculate fee will not get processed until that deposit address is topped up to encompass the fee.
 
-송금시의 토큰양이 릴레이어가 요구하는 수수료보다 적으면 안되니까 아래의 api로 예상되는 수수료 값을 얻을 수 있음
+송금시의 토큰양이 릴레이어가 요구하는 수수료보다 적으면 안되니까 아래의 api로 예상되는 수수료 값을 얻을 수 있습니다.
 
 ```ts
 import {
@@ -190,17 +190,17 @@ const depositAddress = await sdk.getDepositAddress({
 
   - https://axelarscan.io/transfer/0x59da5d709cb54792a84a7acb4b2dadce37c38d1b608e70e6efcaed3e0443dffb
 # Transaction check
-트랜잭션이 막힐 수도(stuck) 있는데 해결 방식은 다음과 같다.
+트랜잭션이 막힐 수도(stuck) 있는데 해결 방식은 다음과 같습니다.
   - Axelarscan UI에서 직접 해결하기
-  - AxelarJS SDK에서 제공하는 api를 통해 메서드를 구현하여 사용하기
+  - AxelarJS SDK에서 제공하는 api를 통해 메서드를 구현하여 해결하기
 https://docs.axelar.dev/dev/monitor-recover/recovery
 
 # Supported Chain & Token List
- Axelar Transfer를 지원하는 체인과 토큰의 종류는 아래의 파일을 참고하면 됩니다.
+ Axelar Transfer를 지원하는 체인과 토큰의 종류는 첨부된 파일에 정리되어 있습니다.
   - 현재 Satellite에서 지원하지 않는 체인과 토큰의 정보도 포함되어 있음
     - injective
 # 주의사항
-- Maximum Transfer Amount가 존재하여 이 값보다 더 많은 양을 transfer시 transfer 프로세스가 완료되기 까지 오랜시간이 걸릴 수도 있다고 경고하고 있음.
+- Maximum Transfer Amount가 존재하여 이 값보다 더 많은 양을 transfer시 transfer 프로세스가 완료되기 까지 오랜시간이 걸릴 수도 있다고 경고하고 있습니다.
 
 - 수신 체인에서 수신할 토큰을 지원하지 않는 경우 해당 토큰은 lost됩니다. 어떤 체인과 토큰이 지원되는지는 Supported Chain & Token List에서 확인 가능합니다.
   - 원문: The recipient will receive wAXL on Ethereum. If your recipient doesn’t support wAXL the funds will be lost!
@@ -251,7 +251,6 @@ https://docs.axelar.dev/dev/monitor-recover/recovery
 - tx hash: 5EFAE4BA8365088688FC0A065ACB9B9DE926C87A6E5D345AA1EDA5C5317BF9A8
 - 악셀러스캔에서 검색 시 더 자세한 결과를 확인 가능함: https://axelarscan.io/transfer/5EFAE4BA8365088688FC0A065ACB9B9DE926C87A6E5D345AA1EDA5C5317BF9A8
 
-2. 이더리움 -> 오스모시스 : axlUSDC 14개 전송
 
 # reference
 axelar transfer api docs: https://docs.axelar.dev/dev/axelarjs-sdk/token-transfer-dep-addr  
