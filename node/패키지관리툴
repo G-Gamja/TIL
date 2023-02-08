@@ -1,0 +1,3 @@
+line 1: rimraf: command not found
+
+npm i rimraf로 해결
