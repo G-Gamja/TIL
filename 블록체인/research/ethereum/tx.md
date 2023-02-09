@@ -109,6 +109,17 @@ response 는 16진수로 값이 날라오는데 아래의 코드를 통해서 �
   // data.result는 16진수
   const totalAmount = BigInt(data?.result || '0').toString();
   ```
+```json
+// Request
+curl -X POST --data '{"jsonrpc":"2.0","method":"eth_sendRawTransaction","params":[{0x어쩌구저쩌구tx를싸인하고나온값}],"id":1}'
+// Result
+{
+  "id":1,
+  "jsonrpc": "2.0",
+  "result": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"
+}
+
+```
 
 참조: https://ethereum.org/ko/developers/docs/transactions/
 

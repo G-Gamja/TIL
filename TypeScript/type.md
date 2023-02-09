@@ -123,3 +123,35 @@ const object = backpack.get();
 // backpack 변수가 string이므로, add 함수에 number를 전달할 수 없습니다.
 backpack.add(23);
 ```
+
+# Awaited
+## Promise로 들어온 타입을 Promise 해제된 타입으로 변환하는 문제.
+
+유틸리티 타입 중 하나로 프로미스의 리턴 타입을 얻게 해줌
+
+예시
+
+```ts
+// fetcher의 리턴 타입을 패키지에서 export하지 않아 Awaited를 통해 가져와야했던 상황
+  const fetcher = async ({
+    sourceChainId: srcChainId,
+    destinationChainId: dstChainId,
+    destinationAddress: dstAddress,
+    assetDenom: denom,
+    options: opt,
+  }: GetDepositAddressParams) => {
+    try {
+      return await axelarAssetTransfer.getDepositAddress(srcChainId, dstChainId, dstAddress, denom, opt);
+    } catch {
+      return null;
+    }
+  };
+
+  const { data, error, mutate } = useSWR<Awaited<ReturnType<typeof fetcher>>, unknown>(getDepositAddressParams, fetcher, {
+    revalidateOnFocus: false,
+    revalidateIfStale: false,
+    revalidateOnReconnect: false,
+    isPaused: () => !getDepositAddressParams,
+    ...config,
+  });
+```

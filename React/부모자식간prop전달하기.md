@@ -19,3 +19,35 @@ Fee에서 원하는 타입과 정확히 일치하는 타입은 selectedFeeCoin�
     feeCoin={selectedFeeCoin}
     />
 ```
+# props로 jsx컴포넌트 넘기기
+
+흔히 아는 이 구조가 그런 구조인데
+```jsx
+ <ManageButton>
+        <Sample />
+    </ManageButton>
+```
+그럴려면 부모에서 children을 아래와 같이 선언해줘야함
+```tsx
+type BaseLayoutProps = {
+  useHeader?: React.ComponentProps<typeof Header>;
+  useSubHeader?: {
+    title: string;
+    onClick?: () => void;
+  };
+  // JSX타입
+  children: JSX.Element;
+};
+
+export default function BaseLayout({ useHeader, useSubHeader, children }: BaseLayoutProps) {
+  const containerHeight = `${60 - (useHeader ? 5.2 : 0) - (useSubHeader ? 4.4 : 0)}rem`;
+
+  return (
+    <Body>
+      {useHeader && <Header {...useHeader} />}
+      {useSubHeader && <SubHeader {...useSubHeader} />}
+      <Container data-height={containerHeight}>{children}</Container>
+    </Body>
+  );
+}
+```
