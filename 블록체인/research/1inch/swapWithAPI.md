@@ -93,6 +93,11 @@ curl -X 'GET' \
 }
 ```
 
+### 추천인 
+- swap api중 param에 referrer의 주소가 들어가는데 아마 이곳에 주소를 넣으면 우리한테 수수료의 일부를 넘겨주는 방식인 것 같음
+- fee param에서 수수료의 몇퍼센트를 추천인이 가져갈 지를 정할 수 있음
+  - this percentage of fromTokenAddress token amount will be sent to referrerAddress, the rest will be used as input for a swap
+    min: 0; max: 3; default: 0  example to set a fee to 1.5%: &fee=1.5
 
 - swap api params: https://docs.1inch.io/docs/aggregation-protocol/api/swap-params
 - quote api params: https://docs.1inch.io/docs/aggregation-protocol/api/quote-params
