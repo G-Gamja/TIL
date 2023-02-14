@@ -54,3 +54,28 @@ const App: React.FC = () => {
 export default App;
 
 ```
+
+이 코드가 왜 안먹히지?
+```jsx
+      <DndProvider backend={HTML5Backend}>
+        <ListContainer ref={drop}>
+            {indexedAccounts.map((account) => (
+              <AccountItem
+                draggableItem={account}
+                moveItem={moveItem}
+                findItem={findItem}
+                accountType={account.type}
+                isActive={selectedAccount?.id === account.id && isOpenPopover}
+                key={account.id}
+                itemIndex={account.index}
+                onClick={(event) => {
+                  setSelectedAccount(account);
+                  setPopoverAnchorEl(event.currentTarget);
+                }}
+              >
+                {accountName[account.id]}
+              </AccountItem>
+            ))}
+        </ListContainer>
+      </DndProvider>
+```
