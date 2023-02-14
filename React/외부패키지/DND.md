@@ -2,6 +2,8 @@ https://channel.io/ko/blog/react-dnd-tips-tricks
 
 
 https://codesandbox.io/s/react-dnd-example-12-kkqpklk3q7?file=/src/example.js
+
+https://medium.com/nmc-techblog/easy-drag-and-drop-in-react-22778b30ba37
 ```ts
 import * as React from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';

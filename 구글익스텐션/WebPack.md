@@ -40,3 +40,34 @@ ES6에서 비동기 처리를 위해 등장한 Promise와 같이 ES5에서 변�
 ## INLINE_RUNTIME_CHUNK=false
 
 INLINE_RUNTIME_CHUNK=false disabled webpack generating inline JavaScript in HTML. Normally webpack will put its own runtime into HTML inline script. But inline script is not allowed by browser extension.
+
+
+## 사용하는 패키지에서 dependency로 걸려있는 패키지가
+참조: https://github.com/microsoft/PowerBI-visuals-tools/issues/365
+ module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: 'file-loader',
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+    ],
+  },
