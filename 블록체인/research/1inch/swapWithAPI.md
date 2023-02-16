@@ -138,3 +138,289 @@ async function swap(fromToken: string, toToken: string, amount: string) {
 
 }
 ```
+# 프로토콜 프로퍼티 내 part의 의미
+In the response of the 1inch quote api, the "part" field means that an amount of a particular token must be split between multiple protocols as part of an exchange. An example of when the "part" field is not equal to 100 would be if you are exchanging two tokens and one of them is divided among multiple liquidity protocols. For example, let's say you need to exchange 10 ETH for DAI. The response could look like this:
+
+```json
+{
+    "fromToken": {
+        "symbol": "ETH",         
+        "name": "Ethereum",
+        "decimals": 18,
+        "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "logoURI": "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+        "tags": [
+            "native",
+            "PEG:ETH"
+        ]
+    },
+    "toToken": {
+        "symbol": "DAI",
+        "name": "Dai Stablecoin v1.0",
+        "decimals": 18,
+        "address": "0x111111111117dc0aa78b770fa6a738034120c302",
+        "logoURI": "https://tokens.1inch.io/0x111111111117dc0aa78b770fa6a738034120c302.png",
+        "eip2612": true,
+        "tags": [
+            "token"
+        ]
+    },
+    "toTokenAmount": "8999233919311950472",
+    "fromTokenAmount": "100000000000000000",
+    "protocols": [
+        [
+            [
+                {
+                    "name": "UNISWAP_V2",
+                    "part": 50, 
+                    "fromTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                    "toTokenAddress": "0x111111111117dc0aa78b770fa6a738034120c302"
+                },
+                {
+                    "name": "KYBER",
+                    "part": 50, 
+                    "fromTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                    "toTokenAddress": "0x111111111117dc0aa78b770fa6a738034120c302"
+                }
+            ]
+        ]
+    ],
+    "estimatedGas": 152065
+}
+```
+In this example, 10 ETH is split into 2 payments of 5 ETH each, where 5 gets exchanged on Uniswap and 5 gets exchanged on Kyber. The "part" value indicates the size of the payment (50% for Uniswap and 50% for Kyber).
+
+{
+  "fromToken": {
+    "symbol": "USDT",
+    "name": "Tether USD",
+    "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    "decimals": 6,
+    "logoURI": "https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png",
+    "tags": [
+      "tokens",
+      "PEG:USD"
+    ]
+  },
+  "toToken": {
+    "symbol": "RPL",
+    "name": "Rocket Pool Protocol",
+    "decimals": 18,
+    "address": "0xd33526068d116ce69f19a9ee46f0bd304f21a51f",
+    "logoURI": "https://tokens.1inch.io/0xd33526068d116ce69f19a9ee46f0bd304f21a51f.png",
+    "tags": [
+      "tokens"
+    ]
+  },
+  "toTokenAmount": "202460029385482257274234",
+  "fromTokenAmount": "10000000000000000",
+  "protocols": [
+    [
+      [
+        {
+          "name": "ONE_INCH_LP_1_1",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "DEFISWAP",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "CURVE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "SADDLE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "BALANCER_V2",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "STABLE_PLAZA",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "SYNAPSE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "XSIGMA",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "MOONISWAP",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "CURVE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "UNISWAP_V3",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "S_FINANCE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "NOMISWAP_STABLE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "SADDLE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "DEFI_PLAZA",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "CURVE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "SWERVE",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "DODO_V2",
+          "part": 2,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "VERSE",
+          "part": 4,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "CURVE",
+          "part": 4,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "CURVE",
+          "part": 18,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        },
+        {
+          "name": "UNISWAP_V2",
+          "part": 38,
+          "fromTokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+          "toTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f"
+        }
+      ],
+      [
+        {
+          "name": "VERSE",
+          "part": 2,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "DEFISWAP",
+          "part": 2,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "UNISWAP_V1",
+          "part": 2,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "SHIBASWAP",
+          "part": 2,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "DXSWAP",
+          "part": 2,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "MOONISWAP",
+          "part": 2,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "UNISWAP_V3",
+          "part": 10,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "SUSHI",
+          "part": 26,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "UNISWAP_V2",
+          "part": 52,
+          "fromTokenAddress": "0x6b175474e89094c44da98b954eedeac495271d0f",
+          "toTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
+      ],
+      [
+        {
+          "name": "UNISWAP_V3",
+          "part": 2,
+          "fromTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "toTokenAddress": "0xd33526068d116ce69f19a9ee46f0bd304f21a51f"
+        },
+        {
+          "name": "UNISWAP_V3",
+          "part": 98,
+          "fromTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "toTokenAddress": "0xd33526068d116ce69f19a9ee46f0bd304f21a51f"
+        }
+      ]
+    ]
+  ],
+  "estimatedGas": 7590956
+}
