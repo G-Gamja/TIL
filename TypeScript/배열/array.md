@@ -31,3 +31,40 @@ join() 함수는 배열의 모든 값들을 연결한 문자열을 리턴합니�
 만약, separator를 입력하지 않은 경우, default로 ','가 들어갑니다.
 
 참조: https://hianna.tistory.com/447
+
+# 배열 비교
+
+- 1차원 배열 비교, 순서가 뒤죽박죽이지만 내용만 같은지를 비교할 때
+```ts
+accounts.length === revertedAccount.length && accounts.every((account, idx) => account === revertedAccount[idx]),
+
+```
+
+```ts
+JSON.stringify(accounts) === JSON.stringify(revertedAccount)
+```
+sort메서드는 호출한 객체의 데이터를 직접 조작하기 때문에 복사한 값을 사용할 것
+
+```ts
+JSON.stringify(
+                  [...accounts].sort((a, b) => {
+                    if (a.id > b.id) return 1;
+                    if (a.id < b.id) return -1;
+                    return 0;
+                  }),
+                ) ===
+                  JSON.stringify(
+                    [...revertedAccount].sort((a, b) => {
+                      if (a.id > b.id) return 1;
+                      if (a.id < b.id) return -1;
+                      return 0;
+                    }),
+                  ),
+```
+비교용 리스트
+```ts
+              const testList = revertedAccount.map((item) => ({
+                ...item,
+                type: 'ahn',
+              }));
+```
