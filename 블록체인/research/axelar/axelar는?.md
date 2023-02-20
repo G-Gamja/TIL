@@ -12,3 +12,11 @@ https://axelarscan.io/gmp/search
 # Reference
 
 axelar doc:https://docs.axelar.dev/
+
+
+# General message passing (GMP)
+
+Squid는 Axelar의 일반 메시지 전달 기능을 사용하여 스왑을 구성합니다. 
+이를 통해 사용자는 대상 체인에서 두 번째 트랜잭션에 서명하지 않고도 모든 토큰을 사용하여 교차 계약 호출을 실행할 수 있습니다.
+
+- 서명 한방에 여러 tx,컨트랙 콜을 해결할 수 있다는 의미

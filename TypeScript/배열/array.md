@@ -68,3 +68,10 @@ JSON.stringify(
                 type: 'ahn',
               }));
 ```
+
+# 중복제거
+
+```ts
+const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
+
+```
