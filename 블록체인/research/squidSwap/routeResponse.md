@@ -266,3 +266,163 @@
     }
   }
  ``` 
+
+이더리움 -> 코스모스 / 이더리움 -> axl USDC로 스왑
+
+fee보다 swap amount가 부족할 시
+```json
+{
+  "errors": [
+    {
+      "errorType": "RouteError",
+      "message": "Bridge fees ($10.5) are higher than the value of your transfer ($1.6939). Please increase your input amount to be greater than ($10.5)."
+    }
+  ]
+}
+```
+
+정상
+```json
+{
+  "route": {
+    "estimate": {
+      "fromAmount": "100000000000000000",
+      "sendAmount": "169300132",
+      "toAmount": "158800132",
+      "toAmountMin": "157107131",
+      "fromAmountUSD": "169.741",
+      "route": {
+        "fromChain": [
+          {
+            "type": "SWAP",
+            "dex": {
+              "chainName": "Ethereum",
+              "dexName": "UniswapV2",
+              "swapRouter": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+              "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+              "isCrypto": true
+            },
+            "target": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+            "path": [
+              "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+              "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+            ],
+            "swapType": "crypto",
+            "squidCallType": 2,
+            "fromToken": {
+              "chainId": 1,
+              "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+              "name": "Ethereum",
+              "symbol": "ETH",
+              "decimals": 18,
+              "logoURI": "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+              "coingeckoId": "ethereum",
+              "commonKey": "weth-wei"
+            },
+            "toToken": {
+              "name": "USDCoin",
+              "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+              "symbol": "USDC",
+              "decimals": 6,
+              "chainId": 1,
+              "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+              "coingeckoId": "usd-coin",
+              "commonKey": "uusdc"
+            },
+            "fromAmount": "100000000000000000",
+            "toAmount": "169300132",
+            "toAmountMin": "167607131",
+            "exchangeRate": "1693.0",
+            "priceImpact": "0.0",
+            "dynamicSlippage": 1.0000000000000009
+          }
+        ],
+        "toChain": []
+      },
+      "feeCosts": [
+        {
+          "name": "Axelar Fee",
+          "description": "Axelar bridge fee",
+          "percentage": "0",
+          "token": {
+            "name": "USDCoin",
+            "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "symbol": "USDC",
+            "decimals": 6,
+            "chainId": 1,
+            "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+            "coingeckoId": "usd-coin",
+            "commonKey": "uusdc"
+          },
+          "amount": "10500000",
+          "amountUSD": "10.4985"
+        }
+      ],
+      "gasCosts": [
+        {
+          "type": "executeCall",
+          "token": {
+            "chainId": 1,
+            "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+            "name": "Ethereum",
+            "symbol": "ETH",
+            "decimals": 18,
+            "logoURI": "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+            "coingeckoId": "ethereum",
+            "commonKey": "weth-wei"
+          },
+          "amount": "10652162660580000",
+          "amountUSD": "18.0878",
+          "gasPrice": "24480884538",
+          "maxFeePerGas": "50215871044",
+          "maxPriorityFeePerGas": "1500000000",
+          "estimate": "410000",
+          "limit": "410000"
+        }
+      ],
+      "estimatedRouteDuration": 960,
+      "exchangeRate": "1588.00132",
+      "aggregatePriceImpact": "0.0",
+      "toAmountUSD": "159.1177"
+    },
+    "params": {
+      "slippage": 1,
+      "toAddress": "cosmos1aygdt8742gamxv8ca99wzh56ry4xw5s39smmhm",
+      "fromAmount": "100000000000000000",
+      "toToken": {
+        "chainId": "cosmoshub-4",
+        "address": "uusdc",
+        "name": "Axelar USDC",
+        "symbol": "axlUSDC",
+        "decimals": 6,
+        "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/21420.png",
+        "coingeckoId": "axlusdc",
+        "commonKey": "uusdc",
+        "ibcDenom": "ibc/932D6003DA334ECBC5B23A071B4287D0A5CC97331197FE9F1C0689BA002A8421"
+      },
+      "fromToken": {
+        "chainId": 1,
+        "address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+        "name": "Ethereum",
+        "symbol": "ETH",
+        "decimals": 18,
+        "logoURI": "https://tokens.1inch.io/0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.png",
+        "coingeckoId": "ethereum",
+        "commonKey": "weth-wei"
+      },
+      "toChain": "cosmoshub-4",
+      "fromChain": "1"
+    },
+    "transactionRequest": {
+      "routeType": "CALL_BRIDGE",
+      "targetAddress": "0xce16F69375520ab01377ce7B88f5BA8C48F8D666",
+      "data": "0xf35af1f80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016345785d8a000000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000001a00000000000000000000000000000000000000000000000000000000000000009636f736d6f736875620000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002d636f736d6f733161796764743837343267616d78763863613939777a683536727934787735733339736d6d686d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000455534443000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000020000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000001c000000000000000000000000000000000000000000000000000000000000000e47ff36ab50000000000000000000000000000000000000000000000000000000009fd7b5b0000000000000000000000000000000000000000000000000000000000000080000000000000000000000000ce16f69375520ab01377ce7b88f5ba8c48f8d666000000000000000000000000000000000000000000000000000001867294e4390000000000000000000000000000000000000000000000000000000000000002000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "value": "100000000000000000",
+      "gasLimit": "410000",
+      "gasPrice": "24480884538",
+      "maxFeePerGas": "50215871044",
+      "maxPriorityFeePerGas": "1500000000"
+    }
+  }
+}
+```
