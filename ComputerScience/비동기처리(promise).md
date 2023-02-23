@@ -241,5 +241,8 @@ async function loadJson(url) { // (1)
 loadJson('no-such-user.json')
   .catch(alert); // Error: 404 (4)
 ```
+
+# Redundant use of `await` on a return value.
+https://stackoverflow.com/questions/44806135/why-no-return-await-vs-const-x-await
 # Promise 와 async,await차이
 https://velog.io/@pilyeooong/Promise%EC%99%80-asyncawait-%EC%B0%A8%EC%9D%B4%EC%A0%90

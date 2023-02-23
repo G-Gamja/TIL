@@ -8,6 +8,21 @@
 참조: https://doqtqu.tistory.com/329
 
 참조 (서스펜스 적용):https://tecoble.techcourse.co.kr/post/2021-07-11-suspense/
+
+# parameter중 key에 대해
+```ts
+const { data, isValidating, error } = useSWR<ReturnDataType>(
+    'key', async () => {
+      // 비동기 통신 부분
+      const res = await ...
+      return res.data
+    },
+  );
+```
+여기서 'key'가 중요한건데 나는 요 키 가 그냥 단순히 fetcher의 아규먼트로 취급하는 줄 
+알아서 파라미터가 없는 fetcher에 아무 키도 안넣었더니 오류를 뱉어내더라고? 그래서 다른 훅(파람이 필요없는 fetcher를 쓰는 SWR훅)이랑 같은 값('{}')을 넣었더니 아니 그 훅의 값을 가져오는 것이다.
+
+그래서 대충 아무 스트링값이나 고유한 값을 줬더니 잘 가져오더라고...이게 뭐람
 # Option - 
 원래 처음 데이터를 가져올때 데이터를 받아오는 중이면 undefine처리가 돼서 데이터를 받는 쪽에서 동기적으로 처리하기
 어려울 떄가 있는데 useSWR로 데이터 가져올때 동기적으로 가져오려면 (서스펜스 옵션을 켜서 그냥 undefine 처리 안해버리도록)
