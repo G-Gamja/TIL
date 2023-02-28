@@ -72,11 +72,19 @@ const params = {
     slippage: 1.00, // 1.00 = 1% max slippage across the entire route 1~99.9까지 설정 가능
     enableForecall: true, // instant execution service, defaults to true
     // Instant execution on the destination chain when set to true. Defaults to true.
-    
+    // 이게 설정되어있어야 따로 컨트랙이 토큰의 allowance를 확보하기 위한 tx를 생성하지 않아도 된다
+    // allowance를 체크하고 싶다면 SDK의 allowance메서드를 사용할 것
     quoteOnly: false // optional, defaults to false
     // If `true`, returns only a quote for the route. Omits transaction data needed for execution. Defaults to `false
 };
 ```
+## allowance
+
+기본적으로는 params에 enableForcall을 true로 설정해주면 추가적으로 allowance tx를 생성하지 않아도 된다.
+
+The `enableForecall` command in the Squid SDK allows you to turn on the implicit allowance for tokens for smart contracts. This means that contracts can allocate tokens for use of specific functions without explicit call to the token contract itself.
+
+You can check token allowances by calling the `allowance` method from the token contract, passing the account address and the contract address you wish to check. 
 ## 스왑 루트 구하기
 params은 위에서 선언한 값을 넣어주면 된다.
 ```ts

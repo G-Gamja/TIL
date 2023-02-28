@@ -35,6 +35,9 @@ If you have not previously exchanged this asset using 1inch Aggregation Protocol
 
 This means that at the moment 1inch router is allowed to exchange 0 tokens for your wallet.
 
+만약 컨트랙이 해당 토큰에 대해 allowance가 확보되지 않은 상태에서 swap api를 사용하게 된다면
+`400`에러가 발생하게 됨
+
 ### 1inch router는 무엇인가
 "1inch Router" refers to a routing engine in the 1inch Network that finds the most optimal path across different decentralized exchanges to execute a trade. It helps ensure the best available prices, lower fees, and faster execution times on advanced order types and strategies.
 
