@@ -57,7 +57,7 @@ introduce("홍", "길동", function(name) {
 
 
 ## 에러
-```
+```ts
 const getUserInputDataFunc = (oname: string) => {
     // 근데 이건 왜 스테이트값이 안바뀌지? 골때리네
     // console.log('이전입니다');
