@@ -178,6 +178,7 @@
             }
           ]
         },
+        // cross chain fee gas
         "feeCosts": [
           {
             "name": "Gas Receiver Fee",
@@ -197,6 +198,7 @@
             "amountUSD": "0.2685"
           }
         ],
+        // source chain gas
         "gasCosts": [
           {
             "type": "executeCall",

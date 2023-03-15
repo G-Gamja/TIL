@@ -75,3 +75,17 @@ JSON.stringify(
 const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
 
 ```
+
+
+# 배열 합산
+
+```ts
+  const delegationAmount = useMemo(
+    () =>
+      delegation?.data
+        ?.filter((item) => item.amount?.denom === chain.baseDenom)
+        ?.reduce((ac, cu) => plus(ac, cu.amount.amount), '0') // 여기서 합산
+        .toString() || '0',
+    [chain.baseDenom, delegation?.data],
+  );
+```
