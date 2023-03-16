@@ -132,3 +132,5 @@ tx구조 톺기: https://steemit.com/busy/@anpigon/ethereum-3
 - 그 값중 4byte를 발췌한다.
 - Input 파라미터가 있다면 각 타입에 맞게 그 값을 Hash 변환하여 붙여준다.
 - 2번에서 작업한 Hash값과 3번에서 작업한 Hash값을 붙여준다.
+
+https://ethereum.org/ko/developers/docs/transactions/#the-data-field
