@@ -75,3 +75,7 @@ _ 옵션 필드 목록: https://doqtqu.tistory.com/329#4.3.%20Options
 참조: https://swr.vercel.app/docs/suspense
 
 한글 api설명서: https://swr.vercel.app/ko/docs/global-configuration
+
+# 뮤테이션
+
+https://velog.io/@code-bebop/SWR-%EC%8B%AC%EC%B8%B5%ED%83%90%EA%B5%AC

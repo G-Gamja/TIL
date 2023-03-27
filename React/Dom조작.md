@@ -1,0 +1,2 @@
+# 이벤트 발생시 스크롤 맨 아래로 설정
+https://kyounghwan01.github.io/blog/React/event-scroll-bottom/#ref-%E1%84%82%E1%85%A5%E1%87%82%E1%84%8B%E1%85%B3%E1%86%AF-%E1%84%90%E1%85%A1%E1%84%80%E1%85%A6%E1%86%BA-%E1%84%89%E1%85%A5%E1%86%AF%E1%84%8C%E1%85%A5%E1%86%BC

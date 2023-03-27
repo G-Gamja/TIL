@@ -30,6 +30,8 @@ join() 함수는 배열의 모든 값들을 연결한 문자열을 리턴합니�
 
 만약, separator를 입력하지 않은 경우, default로 ','가 들어갑니다.
 
+예시:  `return squidRoute.error.errors.map(({message})=>message).join('\n');`
+
 참조: https://hianna.tistory.com/447
 
 # 배열 비교
