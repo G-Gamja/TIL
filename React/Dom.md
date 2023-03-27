@@ -43,3 +43,5 @@ export default function BaseLayout({ children, useHeader, useTitle }: BaseLayout
   );
 }
 ```
+# 무한 스크롤 (Intersection Observer)
+https://velog.io/@hyesungoh/%EB%82%B4%EA%B0%80-Intersection-Observer-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95
