@@ -91,3 +91,42 @@ const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
     [chain.baseDenom, delegation?.data],
   );
 ```
+# 배열 합산 v2
+  const squidSourceChainFeePrice = useMemo(
+    () =>
+      squidRoute.data?.route.estimate.feeCosts?.reduce(
+        (ac, cu) =>
+          plus(
+            ac,
+            times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoPrice.data?.[cu.token.coingeckoId]?.[chromeStorage.currency] || 0),
+          ),
+        '0',
+      ) || '0',
+    [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.feeCosts],
+  );
+
+    // const squidSourceChainFeePrice = useMemo(
+  //   () =>
+  //     squidRoute.data?.route.estimate.feeCosts?.reduce(
+  //       (ac, cu) =>
+  //         plus(
+  //           ac,
+  //           times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoPrice.data?.[cu.token.coingeckoId]?.[chromeStorage.currency] || 0),
+  //         ),
+  //       '0',
+  //     ) || '0',
+  //   [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.feeCosts],
+  // );
+
+  // const squidCrossChainFeePrice = useMemo(
+  //   () =>
+  //     squidRoute.data?.route.estimate.gasCosts.reduce(
+  //       (ac, cu) =>
+  //         plus(
+  //           ac,
+  //           times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoPrice.data?.[cu.token.coingeckoId]?.[chromeStorage.currency] || 0),
+  //         ),
+  //       '0',
+  //     ) || '0',
+  //   [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.gasCosts],
+  // );
