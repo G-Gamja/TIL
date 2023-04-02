@@ -30,6 +30,8 @@ join() 함수는 배열의 모든 값들을 연결한 문자열을 리턴합니�
 
 만약, separator를 입력하지 않은 경우, default로 ','가 들어갑니다.
 
+예시:  `return squidRoute.error.errors.map(({message})=>message).join('\n');`
+
 참조: https://hianna.tistory.com/447
 
 # 배열 비교
@@ -89,3 +91,42 @@ const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
     [chain.baseDenom, delegation?.data],
   );
 ```
+# 배열 합산 v2
+  const squidSourceChainFeePrice = useMemo(
+    () =>
+      squidRoute.data?.route.estimate.feeCosts?.reduce(
+        (ac, cu) =>
+          plus(
+            ac,
+            times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoPrice.data?.[cu.token.coingeckoId]?.[chromeStorage.currency] || 0),
+          ),
+        '0',
+      ) || '0',
+    [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.feeCosts],
+  );
+
+    // const squidSourceChainFeePrice = useMemo(
+  //   () =>
+  //     squidRoute.data?.route.estimate.feeCosts?.reduce(
+  //       (ac, cu) =>
+  //         plus(
+  //           ac,
+  //           times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoPrice.data?.[cu.token.coingeckoId]?.[chromeStorage.currency] || 0),
+  //         ),
+  //       '0',
+  //     ) || '0',
+  //   [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.feeCosts],
+  // );
+
+  // const squidCrossChainFeePrice = useMemo(
+  //   () =>
+  //     squidRoute.data?.route.estimate.gasCosts.reduce(
+  //       (ac, cu) =>
+  //         plus(
+  //           ac,
+  //           times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoPrice.data?.[cu.token.coingeckoId]?.[chromeStorage.currency] || 0),
+  //         ),
+  //       '0',
+  //     ) || '0',
+  //   [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.gasCosts],
+  // );
