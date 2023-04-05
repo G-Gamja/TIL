@@ -45,3 +45,14 @@ export default function BaseLayout({ children, useHeader, useTitle }: BaseLayout
 ```
 # 무한 스크롤 (Intersection Observer)
 https://velog.io/@hyesungoh/%EB%82%B4%EA%B0%80-Intersection-Observer-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95
+
+# useEffect 안에서 useRef사용하기
+
+결론: 안될걸?
+왜? => useRef는 참조중인 객체의 변경사항을 알리지 않기 때문에
+
+But the ref isn’t updated till after your component has rendered — meaning, any useEffect that skips rendering, won’t see any changes to the ref before the next render pass.
+
+https://medium.com/@teh_builder/ref-objects-inside-useeffect-hooks-eb7c15198780
+
+https://ko.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
