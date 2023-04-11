@@ -67,3 +67,8 @@ console.log({ result });
 깃허브 주소: https://github.com/MystenLabs/sui/tree/main/sdk/typescript
 
 필드 설명: http://typescript-sdk-docs.s3-website-us-east-1.amazonaws.com/classes/Connection.html
+
+
+# 
+컨텍스트가 다를 때 그대로 TransactionBlock 객체를 넘기면 안넘어감 => 직렬화 해서 넘겨야 받아올 수 있음
+TransactionBlock.from()안에 스트링으로 serialize()된 값을 넣으면됨
