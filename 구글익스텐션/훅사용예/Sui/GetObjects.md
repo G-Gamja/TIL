@@ -1,14 +1,14 @@
 ```tsx
-  const aa = useOwnedObjectsSWR({ address: currentAddress, provider });
+  const { data: objectsOwnedByAddress } = useGetObjectsOwnedByAddressSWR({ address });
 
   const objectIdList = useMemo(
-    () => (objectsOwnedByAddress?.result && objectsOwnedByAddress.result.data.map((coin) => coin.data.objectId)) || [],
+    () => (objectsOwnedByAddress?.result && objectsOwnedByAddress?.result.data.map((item) => item.data?.objectId || '')) || [],
     [objectsOwnedByAddress?.result],
   );
 
-  const aaa = useObjectsSWR({
+
+  const { data: aaaa } = useGetObjectsSWR({
     objectIds: objectIdList,
-    provider,
     options: {
       showType: true,
       showContent: true,
@@ -17,7 +17,7 @@
     },
   });
 
-  console.log('🚀 ~ file: index.tsx:102 ~ Sui ~ aaa:', aaa);
+  console.log('🚀 ~ file: index.tsx:91 ~ Sui ~ aaaa:', aaaa?.result);
 ```
 ```json
 // aa

@@ -130,3 +130,17 @@ const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
   //     ) || '0',
   //   [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.gasCosts],
   // );
+
+
+# 정렬
+
+원하는 데이터 맨  앞으로
+```tsx
+ suiCoinObjects
+   .sort((a) => {
+     if (a.coinType === SUI_COIN) {
+       return -1;
+     }
+     return 1;
+   })
+```   
