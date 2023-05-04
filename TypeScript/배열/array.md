@@ -142,6 +142,100 @@ times(toDisplayDenomAmount(cu.amount || '0', cu.token.decimals || 0), coinGeckoP
 // [chromeStorage.currency, coinGeckoPrice.data, squidRoute.data?.route.estimate.gasCosts],
 // );
 
+## 안좋은 케이스- reduce
+
+하나의 아이디로 여러개로 분산된 객체들의 키값을 하나로 몰고 싶을때 아래와 같이 구현을 했는데
+이렇게 되면 첫 순번의 객체를 제외한 나머지 객체들의 데이터가 사라지게 되어서 좋지못함
+
+```ts
+const tokenBalanceObjects = useMemo(() => {
+  const copiedList = objects?.result ? [...objects.result] : [];
+  return copiedList
+    .filter(
+      (item) =>
+        getCoinType(item.data?.type) &&
+        item.data?.content?.dataType === "moveObject" &&
+        item.data.content.hasPublicTransfer
+    )
+    .map((item, _, array) => ({
+      balance:
+        array.reduce((ac, cu) => {
+          if (
+            item.data?.type === cu.data?.type &&
+            cu.data?.content?.dataType === "moveObject"
+          )
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            return plus(ac, (cu.data?.content.fields.balance as string) || "0");
+
+          return ac;
+        }, "0") || "0",
+      coinType: getCoinType(item.data?.type),
+      objects: [
+        ...array.filter(
+          (arrayItem) => arrayItem.data?.type === item.data?.type
+        ),
+      ],
+      ...item,
+      // NOTE 요 아이템 내에는 하나로 합쳐진 개개별의 오브젝트들을 모두 넣어야한다
+      // NOTE 그래야 합쳐진 오브젝트들이 어떤값을 가지고 있고 그 값들의 합산으로 얼마만큼의 밸런스가 나오게 되었는지 알 수 있게되는것임.
+      item: [],
+    }))
+    .filter(
+      (object, idx, arr) =>
+        arr.findIndex((item) => item.data?.type === object.data?.type) ===
+          idx &&
+        gt(object.balance, "0") &&
+        object.coinType
+    )
+    .sort((coin) => (coin.coinType === SUI_COIN ? -1 : 1));
+}, [objects?.result]);
+```
+
+개선 버젼
+
+```ts
+const tokenBalanceObjects = useMemo(() => {
+  const copiedList = objects?.result ? [...objects.result] : [];
+
+  const uniquebyTypeCoinList = Array.from(
+    new Set([
+      ...copiedList.filter(
+        (item) =>
+          getCoinType(item.data?.type) &&
+          item.data?.content?.dataType === "moveObject" &&
+          item.data.content.hasPublicTransfer
+      ),
+    ])
+  );
+
+  return uniquebyTypeCoinList
+    .map((coin) => ({
+      balance:
+        copiedList
+          .filter(
+            (item) =>
+              coin.data?.type === item.data?.type &&
+              item.data?.content?.dataType === "moveObject"
+          )
+          .reduce((ac, cu) => {
+            if (cu.data?.content?.dataType === "moveObject")
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              return plus(
+                ac,
+                (cu.data?.content.fields.balance as string) || "0"
+              );
+
+            return ac;
+          }, "0") || "0",
+      coinType: getCoinType(coin.data?.type),
+      objects: [
+        ...copiedList.filter((item) => coin.data?.type === item.data?.type),
+      ],
+    }))
+    .sort((coin) => (coin.coinType === SUI_COIN ? -1 : 1));
+}, [objects?.result]);
+```
+
 # 정렬
 
 원하는 데이터 맨 앞으로
