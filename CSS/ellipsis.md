@@ -47,3 +47,20 @@ Block레벨 테그에서만 적용됨.
 overflow:hidden : 넓이가 70px를 넒어서는 내용에 대해서는 보이지 않게 처리함
 text-overflow:ellipsis : 글자가 넓이 70px를 넘을 경우 생략부호를 표시함
 white-space:nowrap : 공백문자가 있는 경우 줄바꿈하지 않고 한줄로 나오게 처리함 (\A로 줄바꿈가능)
+
+```ts
+export const ObjectDescriptionTextContainer = styled("div")(({ theme }) => ({
+  color: theme.colors.text01,
+
+  // 부모 컴포넌트에서 width를 정해줘야함
+  maxWidth: "100%",
+
+  wordBreak: "keep-all",
+  whiteSpace: "nowrap",
+
+  "& > *": {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+}));
+```

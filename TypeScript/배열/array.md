@@ -303,3 +303,14 @@ const arr4 = [1, 2, [3, 4, [5, 6, [7, 8, [9, 10]]]]];
 arr4.flat(Infinity);
 // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
+
+# forEach
+
+단순히(return이나 map처럼 새 배열을 만들고 싶지 않을때)
+배열을 순회하면서 해당 객체를 참조해 사용하고 싶을 때 사용
+
+```ts
+nftNameList.forEach((item) => {
+  infos.push({ type: "all", name: item, count: nftObjects.length });
+});
+```

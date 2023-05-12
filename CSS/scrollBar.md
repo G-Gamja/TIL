@@ -9,6 +9,7 @@ y축에만 적용
 다른 child 컴포넌트의 높이를 고려하여 overflow하는법 - 굳이 height안줘도 됨
 
 부모 - display:flex, column으로 해주고 아래 자식 컴포넌트에 그냥 overflow:auto하면됨
+--> 이거 안되면 부모쪽에서 overflow줘야함
 
 ## 스크롤바 디자인하기
 
