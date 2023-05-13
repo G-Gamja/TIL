@@ -7,3 +7,9 @@ undefine인 객체를 구조분해하는 법
   const {fromTokenAddress, toTokenAddress, fromAddress, slippage, amount, chainId} = routeParam || {};
 
 ```
+
+```ts
+  const { getBalance } = (chain && cosmosURL(chain)) ?? {};
+
+  const requestURL = getBalance && getBalance(address);
+```

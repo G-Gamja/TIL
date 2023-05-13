@@ -6,7 +6,7 @@
     - 나는 오스모시스랩에서 사용한 패키지 버젼을 맞추어 add해주었고
 
 * 만약 오류를 뱉어낸다 -> 그냥 노드 모듈을 지우고 새로 yarn해라 
-- $ git rm -rf node_modules
+- $ rm -rf node_modules
 - $ yarn
 
 참조 (노드모듈 지우는 방법): https://velog.io/@heony/gitignore
