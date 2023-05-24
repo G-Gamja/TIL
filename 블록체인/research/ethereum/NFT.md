@@ -82,6 +82,113 @@ function balanceOf(address account, uint256 id) public view returns (uint256) {}
 
 이 함수를 호출하면 지정된 계정이 해당 token ID의 인스턴스를 보유하는 경우 해당 인스턴스 수가 반환됩니다.
 
+# ERC 721 - ERC 1155 구분 짓기
+
+네, `isERC721Token` 및 `isERC1155Token` 함수를 구현하는 데 사용할 수 있는 ERC-721 및 ERC-1155 토큰의 ABI(JSON 형식) 정보가 있으면 해당 정보를 활용하여 구현할 수 있습니다.
+
+아래는 TypeScript로 ERC-721/ERC-1155 토큰을 구분할 수 있는 ABI(PDOs)에 의존한 함수 예시입니다.
+
+```typescript
+import { ethers } from "ethers";
+
+const ERC721_ABI = [
+  // ERC721 메소드 목록
+];
+
+const ERC1155_ABI = [
+  // ERC1155 메소드 목록
+];
+
+async function isERC721Token(
+  contractAddress: string,
+  tokenId: number
+): Promise<boolean> {
+  const provider = new ethers.providers.JsonRpcProvider();
+  const contract = new ethers.Contract(contractAddress, ERC721_ABI, provider);
+  try {
+    const owner = await contract.ownerOf(tokenId);
+    return true; // 오류 없이 호출되면 ERC-721 토큰으로 간주
+  } catch (e) {
+    return false; // 오류가 발생하면 ERC-721 토큰이 아닌 것으로 간주
+  }
+}
+
+async function isERC1155Token(
+  contractAddress: string,
+  tokenId: number,
+  instanceId: number
+): Promise<boolean> {
+  const provider = new ethers.providers.JsonRpcProvider();
+  const contract = new ethers.Contract(contractAddress, ERC1155_ABI, provider);
+  try {
+    const balance = await contract.balanceOf(instanceId, tokenId);
+    return true; // 오류 없이 호출되면 ERC-1155 토큰으로 간주
+  } catch (e) {
+    return false; // 오류가 발생하면 ERC-1155 토큰이 아닌 것으로 간주
+  }
+}
+```
+
+위 함수에서는 `ethers.js` 패키지를 사용하여 이더리움 노드와 상호작용하는 방법을 보여줍니다.
+
+각 함수는 해당 컨트랙트 주소 및 토큰 ID 또는 인스턴스 ID를 매개변수로 받고, 호출 결과 오류가 없으면 해당 토큰을 그에 따라 ERC-721 또는 ERC-1155 토큰으로 결정합니다.
+
+```typescript
+// ERC-721 Token
+const contractAddress = "0x1234...5678";
+const tokenId = 123;
+
+if (await isERC721Token(contractAddress, tokenId)) {
+  console.log("This is an ERC-721 Token.");
+} else {
+  console.log("This is not an ERC-721 Token.");
+}
+
+// ERC-1155 Token
+const instanceId = 1;
+const tokenId2 = 456;
+
+if (await isERC1155Token(contractAddress, tokenId2, instanceId)) {
+  console.log("This is an ERC-1155 Token.");
+} else {
+  console.log("This is not an ERC-1155 Token.");
+}
+```
+
+따라서 위 함수들은 ERC-721 및 ERC-1155 토큰의 ABI(JSON 형식) 정보를 사용하여 해당 토큰이 어떤 타입인지 확인하기 위한 다른 방법입니다.
+
+```ts
+import { ethers } from "ethers";
+
+const contractAddress = "0x123abc...";
+const provider = new ethers.providers.JsonRpcProvider();
+
+const contract = new ethers.Contract(contractAddress, erc721Abi, provider);
+const supportInterfaceFnHash = "0x01ffc9a7"; // supportsInterface 함수의 signature hash
+
+// ERC-721 토큰인지 확인
+if (await contract.supportsInterface(supportInterfaceFnHash)) {
+  console.log("This is an ERC-721 token.");
+}
+
+// ERC-1155 토큰인지 확인
+const contract1155 = new ethers.Contract(contractAddress, erc1155Abi, provider);
+const erc1155SupportInterfaceFnHash = "0xd9b67a26"; // supportsInterface 함수의 signature hash for ERC-1155
+if (await contract1155.supportsInterface(erc1155SupportInterfaceFnHash)) {
+  console.log("This is an ERC-1155 token.");
+}
+```
+
+# ERC 1155
+
+## 소유주 확인법
+
+ERC-1155의 balanceOfBatch 메서드를 사용하면 주어진 \_ids와 \_owners에 대한 계정의 잔액을 가져올 수 있습니다. 이 방법으로 소유주를 확인할 수 있지만, 더 직관적인 방법은 ownerOf와 같은 특수 함수를 사용하는 것입니다.
+
+ERC-721과는 달리 ERC-1155는 각 토큰 ID마다 자체적인 소유자가 있다는 개념이 없습니다. 대신, 각 NFT ID는 여러 계정에서 공유될 수 있으며 balanceOf 함수를 사용하여 각 계정이 해당 NFT ID를 몇 개 보유하고 있는지 확인할 수 있습니다.
+
+따라서, ERC-1155에서는 ownerOf 함수 대신, balanceOf와 balanceOfBatch와 같은 다른 함수를 사용하여 소유자를 식별해야합니다.
+
 # 마켓플레이스
 
 Nftmarketplace
