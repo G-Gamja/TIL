@@ -64,3 +64,5 @@ export const ObjectDescriptionTextContainer = styled("div")(({ theme }) => ({
   },
 }));
 ```
+
+child 간격 고려해서 반응형으로 말줄임 관련해서 읽어볼만한: https://taegon.kim/archives/10549
