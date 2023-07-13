@@ -89,3 +89,12 @@ https://velog.io/@code-bebop/SWR-%EC%8B%AC%EC%B8%B5%ED%83%90%EA%B5%AC
 
 multi fetcher
 https://github.com/vercel/swr/discussions/475
+
+# 주의할점
+
+여러 훅을 동시에 쓸 때
+한 훅의 리턴값으로 다른 훅의 파라미터를 사용할때
+이때 실행될 훅의 파라미터가 pause조건으로 걸려있을 때
+첫 훅의 리턴값이 없을때는 항상 pause가 걸리기에 모든 동작이 스탑될거다...
+
+- 그니까 pause조건과 파람의 옵셔널을 잘 생각해야한다.
