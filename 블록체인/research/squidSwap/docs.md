@@ -61,8 +61,9 @@ const fromToken = squid.tokens.find(
 ```
 
 여기서 c.chainName은 axelar sdk에서 사용하는 값을 사용한다 - https://docs.axelar.dev/dev/build/chain-names/mainnet
-지원하는 토큰의 종류 또한 axelar sdk와 같다  
- - https://docs.axelar.dev/dev/build/contract-addresses/mainnet
+지원하는 토큰의 종류 또한 axelar sdk와 같다
+
+- https://docs.axelar.dev/dev/build/contract-addresses/mainnet
 
 ## Transfer Params
 
@@ -93,6 +94,8 @@ const params = {
 The `enableForecall` command in the Squid SDK allows you to turn on the implicit allowance for tokens for smart contracts. This means that contracts can allocate tokens for use of specific functions without explicit call to the token contract itself.
 
 You can check token allowances by calling the `allowance` method from the token contract, passing the account address and the contract address you wish to check.
+
+수동으로 allowance 설정법: https://docs.squidrouter.com/resources/sdk-easter-eggs/manual-erc20-approval
 
 ## 스왑 루트 구하기
 

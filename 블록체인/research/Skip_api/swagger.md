@@ -102,6 +102,10 @@ As we can see from the previous step, the Cosmos Hub is an intermediate chain wh
 
 이전 단계에서 확인할 수 있듯이, Cosmos Hub은 pfmEnabled = true인 중간 체인입니다. PFM(Packet-Forward Middleware)은 일부 체인에 포함된 기능으로, IBC 메모 필드에 전달 데이터가 포함된 수신 IBC 패킷을 감지하고 자동으로 다음 목적지로의 IBC 패킷을 전달합니다.
 
+pfm참조 사이트: https://github.com/strangelove-ventures/packet-forward-middleware
+
+pfm아티클 : https://ideas.skip.money/t/how-to-give-ibc-superpowers/81#packet-forward-middleware-pfm-3
+
 # Construct Message
 
 ### Request
@@ -386,6 +390,58 @@ ibc 예시
 
   "chainId": "cosmoshub-4"
 }
+
+
+{
+  "txBody": {
+    "messages": [
+      {
+        "sender": "osmo1aygdt8742gamxv8ca99wzh56ry4xw5s3dtgtpf",
+        "contract": "osmo1mrm80xxdv8yhrt6gqvx2n638vjh23j023xj5yufha9y02gvskmaqwn2lw8",
+        "msg": "eyJzd2FwX2FuZF9hY3Rpb24iOnsidXNlcl9zd2FwIjp7InN3YXBfdmVudWVfbmFtZSI6Im9zbW9zaXMtcG9vbG1hbmFnZXIiLCJvcGVyYXRpb25zIjpbeyJwb29sIjoiODc5IiwiZGVub21faW4iOiJ1b3NtbyIsImRlbm9tX291dCI6ImliYy82MzI5REQ4Q0YzMUEzMzRERDVCRTNGNjhDODQ2QzlGRTMxMzI4MTM2MkIzNzY4NkE2MjM0M0JBQzFFQjE1NDZEIn1dfSwibWluX2NvaW4iOnsiZGVub20iOiJpYmMvNjMyOUREOENGMzFBMzM0REQ1QkUzRjY4Qzg0NkM5RkUzMTMyODEzNjJCMzc2ODZBNjIzNDNCQUMxRUIxNTQ2RCIsImFtb3VudCI6Ijk3NDAzODkyNTA5MjcwOTM1NCJ9LCJ0aW1lb3V0X3RpbWVzdGFtcCI6MTY5MDE2NTMyNjUyMjA5ODAwMCwicG9zdF9zd2FwX2FjdGlvbiI6eyJiYW5rX3NlbmQiOnsidG9fYWRkcmVzcyI6Im9zbW8xYXlnZHQ4NzQyZ2FteHY4Y2E5OXd6aDU2cnk0eHc1czNkdGd0cGYifX0sImFmZmlsaWF0ZXMiOltdfX0=",
+        "funds": [
+          {
+            "denom": "uosmo",
+            "amount": "2000000"
+          }
+        ]
+      }
+    ],
+    "memo": "",
+    "timeoutHeight": "0",
+    "extensionOptions": [],
+    "nonCriticalExtensionOptions": []
+  },
+  "authInfo": {
+    "signerInfos": [
+      {
+        "publicKey": {
+          "typeUrl": "/cosmos.crypto.secp256k1.PubKey",
+          "value": "CiECoqz7XBbK22JBjnUSeHnKSU6RmzmcWom5Psoizic2jhY="
+        },
+        "modeInfo": {
+          "single": {
+            "mode": "SIGN_MODE_DIRECT"
+          }
+        },
+        "sequence": "140"
+      }
+    ],
+    "fee": {
+      "amount": [
+        {
+          "denom": "uosmo",
+          "amount": "14422"
+        }
+      ],
+      "gasLimit": "576841",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "chainId": "osmosis-1",
+  "accountNumber": "706372"
+}
 ```
 
 코스모스테이션으로 들어오는 메시지 예시
@@ -507,3 +563,18 @@ ibc 예시
   "sequence": "22"
 }
 ```
+
+# Affiliates
+
+구조는 다음과 같다
+
+```typescript
+export type Affiliates = {
+  basis_points_fee: string;
+  address: string;
+};
+```
+
+`address`에는 `swap venue`로 사용되는 체인의 주소를 넣으면 된다
+
+예) 오스모 -> 오스모 (오스모 -> AXL)이면 affiliate로 넣은 주소로 설정한 비율 만큼 스왑되어 나오는 토큰을 가져간다. 즉 이 케이스에서는 AXL토큰을 받게 되는것

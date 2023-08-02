@@ -7,7 +7,7 @@
 6.
 7. promise, promise.all, promise.allSettled
 8. Router
-9. aws cloudfront
+9. aws cloudfront ,CI CD
 10. index.html이 하는 역할이 뭔지
 
     <meta property="og:url" content="https://dash.splash.im/" />
