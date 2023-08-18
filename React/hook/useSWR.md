@@ -98,3 +98,58 @@ https://github.com/vercel/swr/discussions/475
 첫 훅의 리턴값이 없을때는 항상 pause가 걸리기에 모든 동작이 스탑될거다...
 
 - 그니까 pause조건과 파람의 옵셔널을 잘 생각해야한다.
+
+# Error시 key 변경해서 재시도 하는방법
+
+```tsx
+const fetcher = async (fetchUrl: string): Promise<NFTMetaPayload | null> => {
+  try {
+    if (!httpsRegex.test(fetchUrl)) {
+      return null;
+    }
+
+    if (nftSourceURI.error) {
+      throw nftSourceURI.error;
+    }
+    return await get<NFTMetaPayload>(fetchUrl);
+  } catch (e) {
+    if (isAxiosError(e)) {
+      if (e.response?.status === 404) {
+        // NOTE 여기서 key를 변경해서 재시도를 해야함
+        return fetcher(
+          nftSourceURI.data?.token_uri.includes("ipfs:")
+            ? convertIpfs(nftSourceURI.data?.token_uri)
+            : convertIpfs(nftSourceURI.data?.token_uri)
+        );
+      }
+    }
+    throw e;
+  }
+};
+
+const { data, isValidating, error, mutate } = useSWR<
+  NFTMetaPayload | null,
+  AxiosError
+>(paramURL, fetcher, {
+  revalidateOnFocus: false,
+  revalidateIfStale: false,
+  revalidateOnReconnect: false,
+  errorRetryCount: 3,
+  errorRetryInterval: 5000,
+  onErrorRetry: (err, _, __, revalidate, { retryCount }) => {
+    // 404에서 재시도 안함
+    if (err.response?.status === 404) return;
+
+    // 10번까지만 재시도함
+    if (retryCount >= 10) return;
+
+    // 5초 후에 재시도
+    setTimeout(() => {
+      void revalidate();
+      w;
+    }, 2000);
+  },
+  isPaused: () => !paramURL || !nftSourceURI.data,
+  ...config,
+});
+```
