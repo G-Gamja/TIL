@@ -314,3 +314,11 @@ nftNameList.forEach((item) => {
   infos.push({ type: "all", name: item, count: nftObjects.length });
 });
 ```
+
+## 배열 마지막꺼 찾기
+
+at 메서드는 음수도 입력가능
+
+```ts
+testArrayList.at(-1);
+```
