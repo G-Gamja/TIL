@@ -81,6 +81,27 @@ _ 옵션 필드 목록: https://doqtqu.tistory.com/329#4.3.%20Options
 
 한글 api설명서: https://swr.vercel.app/ko/docs/global-configuration
 
+### 옵션 테스팅
+
+요청 성공 후에 무조건 3초마다 요청을 다시 함.
+-> 요청 실패 시에는 왜 3초마다 요청을 다시 하지 않는가?
+
+```ts
+const { data, isValidating, error, mutate } = useSWR<
+  TxInfoPayload | null,
+  AxiosError
+>(requestURL, fetcher, {
+  revalidateOnFocus: false,
+  revalidateIfStale: false,
+  revalidateOnReconnect: false,
+  dedupingInterval: 0,
+  refreshInterval: 3000,
+  errorRetryCount: 3,
+  ...config,
+  isPaused: () => !txHash || !chain,
+});
+```
+
 # 뮤테이션
 
 https://velog.io/@code-bebop/SWR-%EC%8B%AC%EC%B8%B5%ED%83%90%EA%B5%AC
@@ -152,4 +173,81 @@ const { data, isValidating, error, mutate } = useSWR<
   isPaused: () => !paramURL || !nftSourceURI.data,
   ...config,
 });
+```
+
+# useSWR의 fetcher에 대해
+
+로딩 상태관리하는 법
+
+```jsx
+import { useState, useEffect } from "react";
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+function MyComponent() {
+  const { data, error } = useSWR("/api/data", fetcher, {
+    refreshInterval: 10000,
+  });
+  const [hasTimedOut, setHasTimedOut] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!data && !error) {
+        setHasTimedOut(true);
+      }
+    }, 10000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [data, error]);
+
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+
+  if (hasTimedOut) {
+    return <div>Data request timed out</div>;
+  }
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  return <div>Data: {data}</div>;
+}
+
+export default MyComponent;
+```
+
+# 에러처리, onErrorRetry 옵션
+
+```ts
+// NOTE 네트워크 요청 안한다고 하기 위한 상태변수임
+const [hasTimedOut, setHasTimedOut] = useState(false);
+
+const { data, isValidating, error, mutate } = useSWR<
+  TxInfoPayload | null,
+  AxiosError
+>(requestURL, fetcher, {
+  revalidateOnFocus: false,
+  revalidateIfStale: false,
+  revalidateOnReconnect: false,
+  ...config,
+  onErrorRetry: (__, ___, _, revalidate, { retryCount }) => {
+    if (retryCount >= 6) return;
+
+    if (retryCount === 5) {
+      setHasTimedOut(true);
+    }
+    setTimeout(() => {
+      void revalidate({ retryCount });
+    }, 5000);
+  },
+  isPaused: () => !txHash || !chain,
+});
+
+// hasTimedOut를 기점으로 에러처리를 하면 되는 거야
+return { data, isValidating, error, hasTimedOut, mutate };
 ```
