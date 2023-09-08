@@ -322,3 +322,7 @@ at 메서드는 음수도 입력가능
 ```ts
 testArrayList.at(-1);
 ```
+
+# 깊은 복사와 얕은 복사
+
+https://bbaktaeho-95.tistory.com/37
