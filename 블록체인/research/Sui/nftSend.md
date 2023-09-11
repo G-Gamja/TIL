@@ -1,6 +1,67 @@
 ## kiosk nft send
 
 ```ts
+export enum KioskTypes {
+  SUI = "sui",
+  ORIGINBYTE = "originByte",
+}
+```
+
+```ts
+export function getKioskIdFromOwnerCap(
+  object: SuiObjectResponse | SuiObjectData
+) {
+  const objectData =
+    "data" in object && object.data ? object.data : (object as SuiObjectData);
+  const fields =
+    objectData.content?.dataType === "moveObject"
+      ? (objectData.content.fields as { for?: string; kiosk?: string })
+      : null;
+  return fields?.for ?? fields?.kiosk!;
+}
+ -------------------
+const tx = new TransactionBlock();
+const recipientKiosks = await client.getOwnedObjects({
+  owner: to,
+  options: { showContent: true },
+  filter: { StructType: ORIGINBYTE_KIOSK_OWNER_TOKEN },
+});
+const recipientKiosk = recipientKiosks.data[0];
+const recipientKioskId = recipientKiosk
+  ? getKioskIdFromOwnerCap(recipientKiosk)
+  : null;
+
+if (recipientKioskId) {
+  tx.moveCall({
+    target: `${obPackageId}::ob_kiosk::p2p_transfer`,
+    typeArguments: [objectType],
+    arguments: [
+      tx.object(kioskId),
+      tx.object(recipientKioskId),
+      tx.pure(objectId),
+    ],
+  });
+} else {
+  tx.moveCall({
+    target: `${obPackageId}::ob_kiosk::p2p_transfer_and_create_target_kiosk`,
+    typeArguments: [objectType],
+    arguments: [tx.object(kioskId), tx.pure(to), tx.pure(objectId)],
+  });
+}
+return signer.signAndExecuteTransactionBlock(
+  {
+    transactionBlock: tx,
+    options: {
+      showInput: true,
+      showEffects: true,
+      showEvents: true,
+    },
+  },
+  clientIdentifier
+);
+```
+
+```ts
 transactionBlock.moveCall({
   // NOTE packageId 는 원본 객체의 타입 맨 앞
   target: `${packageId}::ob_kiosk::p2p_transfer_and_create_target_kiosk`,
@@ -17,184 +78,123 @@ transactionBlock.moveCall({
 });
 ```
 
-nft type 선택버튼 있는 버젼
+원본 소스코드
 
-```tsx
-import { Suspense, useMemo, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { Typography } from "@mui/material";
-import { getObjectDisplay } from "@mysten/sui.js";
+```ts
+export function useTransferKioskItem({
+  objectId,
+  objectType,
+}: {
+  objectId: string;
+  objectType?: string | null;
+}) {
+  const client = useSuiClient();
+  const activeAccount = useActiveAccount();
+  const signer = useSigner(activeAccount);
+  const address = activeAccount?.address;
 
-import Empty from "~/Popup/components/common/Empty";
-import EmptyAsset from "~/Popup/components/EmptyAsset";
-import { useAccounts } from "~/Popup/hooks/SWR/cache/useAccounts";
-import { useNFTObjectsSWR } from "~/Popup/hooks/SWR/sui/useNFTObjectsSWR";
-import { useCurrentAccount } from "~/Popup/hooks/useCurrent/useCurrentAccount";
-import { useNavigate } from "~/Popup/hooks/useNavigate";
-import { getNFTMeta } from "~/Popup/utils/sui";
-import type { SuiChain } from "~/types/chain";
-import type { Path } from "~/types/route";
-
-import NFTCardItem, { NFTCardItemSkeleton } from "./components/NFTCardItem";
-// import TypeButton from './components/TypeButton';
-import type { TypeInfo } from "./components/TypePopover";
-import TypePopover from "./components/TypePopover";
-import {
-  Container,
-  ListContainer,
-  ListTitleContainer,
-  ListTitleLeftContainer,
-  ListTitleRightContainer,
-} from "./styled";
-
-type NFTListProps = {
-  chain: SuiChain;
-};
-
-export default function NFTList({ chain }: NFTListProps) {
-  const { navigate } = useNavigate();
-
-  const [popoverAnchorEl, setPopoverAnchorEl] =
-    useState<HTMLButtonElement | null>(null);
-  const isOpenPopover = Boolean(popoverAnchorEl);
-
-  const { currentAccount } = useCurrentAccount();
-
-  const accounts = useAccounts(true);
-
-  const currentAddress = useMemo(
-    () =>
-      accounts?.data?.find((account) => account.id === currentAccount.id)
-        ?.address?.[chain.id] || "",
-    [accounts?.data, chain.id, currentAccount.id]
+  const obPackageId = useFeatureValue(
+    "kiosk-originbyte-packageid",
+    ORIGINBYTE_PACKAGE_ID
   );
+  const { data: kioskData } = useGetKioskContents(address);
 
-  const { nftObjects } = useNFTObjectsSWR({ address: currentAddress });
+  const objectData = useGetObject(objectId);
 
-  const typeInfos = useMemo(() => {
-    const infos: TypeInfo[] = [];
+  return useMutation({
+    mutationFn: async ({
+      to,
+      clientIdentifier,
+    }: {
+      to: string;
+      clientIdentifier?: string;
+    }) => {
+      if (!to || !signer || !objectType) {
+        throw new Error("Missing data");
+      }
 
-    const nftNameList = Array.from(
-      new Set([
-        ...(nftObjects
-          ?.filter(
-            (item) =>
-              item.data?.content?.dataType === "moveObject" &&
-              getObjectDisplay(item).data?.name
-          )
-          .map((item) => getObjectDisplay(item).data?.name || "") || []),
-      ])
-    );
+      const kioskId = kioskData?.lookup.get(objectId);
+      const kiosk = kioskData?.kiosks.get(kioskId!);
 
-    infos.push({ type: "all", name: "All Assets", count: nftObjects.length });
+      if (!kioskId || !kiosk) {
+        throw new Error("Failed to find object in a kiosk");
+      }
 
-    nftNameList.forEach((item) => {
-      infos.push({
-        type: item,
-        name: item,
-        count: nftObjects.filter(
-          (object) => item === getObjectDisplay(object).data?.name
-        ).length,
-      });
-    });
+      if (
+        kiosk.type === KioskTypes.SUI &&
+        objectData?.data?.data?.type &&
+        kiosk?.ownerCap
+      ) {
+        const tx = new TransactionBlock();
+        // take item out of kiosk
+        const obj = take(
+          tx,
+          objectData.data?.data?.type,
+          kioskId,
+          kiosk?.ownerCap,
+          objectId
+        );
+        // transfer as usual
+        tx.transferObjects([obj], tx.pure(to));
+        return signer.signAndExecuteTransactionBlock(
+          {
+            transactionBlock: tx,
+            options: {
+              showInput: true,
+              showEffects: true,
+              showEvents: true,
+            },
+          },
+          clientIdentifier
+        );
+      }
 
-    if (
-      nftObjects &&
-      nftObjects?.filter((item) => !getObjectDisplay(item).data?.name).length
-    ) {
-      infos.push({
-        type: "etc",
-        name: "ETC",
-        count: nftObjects.filter(
-          (object) => !getObjectDisplay(object).data?.name
-        ).length,
-      });
-    }
+      if (
+        kiosk.type === KioskTypes.ORIGINBYTE &&
+        objectData?.data?.data?.type
+      ) {
+        const tx = new TransactionBlock();
+        const recipientKiosks = await client.getOwnedObjects({
+          owner: to,
+          options: { showContent: true },
+          filter: { StructType: ORIGINBYTE_KIOSK_OWNER_TOKEN },
+        });
+        const recipientKiosk = recipientKiosks.data[0];
+        const recipientKioskId = recipientKiosk
+          ? getKioskIdFromOwnerCap(recipientKiosk)
+          : null;
 
-    return infos;
-  }, [nftObjects]);
-
-  const [currentType, setCurrentType] = useState(typeInfos[0].type);
-
-  const currentTypeInfo = useMemo(
-    () => typeInfos.find((item) => item.type === currentType),
-    [currentType, typeInfos]
-  );
-
-  const isExistNFT = nftObjects && !!nftObjects.length;
-
-  const filteredNFTObjects = useMemo(() => {
-    if (currentType === "all") return nftObjects;
-    if (currentType === "etc")
-      return (
-        nftObjects.filter((item) => !getObjectDisplay(item).data?.name) || []
-      );
-
-    return (
-      nftObjects.filter(
-        (item) => currentTypeInfo?.name === getObjectDisplay(item).data?.name
-      ) || []
-    );
-  }, [currentType, currentTypeInfo?.name, nftObjects]);
-
-  if (!isExistNFT) {
-    return <EmptyAsset assetType="nft" />;
-  }
-
-  return (
-    <Container>
-      <ListTitleContainer>
-        <ListTitleLeftContainer>
-          {/* <TypeButton
-            text={currentTypeInfo?.name}
-            number={currentTypeInfo?.count}
-            onClick={(event) => setPopoverAnchorEl(event.currentTarget)}
-            isActive={isOpenPopover}
-          /> */}
-        </ListTitleLeftContainer>
-        <ListTitleRightContainer />
-      </ListTitleContainer>
-      <ListContainer>
-        {filteredNFTObjects.map((nft) => {
-          const nftMeta = getNFTMeta(nft);
-          return (
-            <ErrorBoundary key={nft.data?.objectId} FallbackComponent={Empty}>
-              <Suspense fallback={<NFTCardItemSkeleton />}>
-                <NFTCardItem
-                  nftMeta={nftMeta}
-                  onClick={() =>
-                    navigate(
-                      `/wallet/nft-detail/${
-                        nft.data?.objectId || ""
-                      }` as unknown as Path
-                    )
-                  }
-                />
-              </Suspense>
-            </ErrorBoundary>
-          );
-        })}
-      </ListContainer>
-      <TypePopover
-        marginThreshold={0}
-        currentTypeInfo={currentTypeInfo}
-        typeInfos={typeInfos}
-        onClickType={(selectedTypeInfo) => {
-          setCurrentType(selectedTypeInfo.type);
-        }}
-        open={isOpenPopover}
-        onClose={() => setPopoverAnchorEl(null)}
-        anchorEl={popoverAnchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-      />
-    </Container>
-  );
+        if (recipientKioskId) {
+          tx.moveCall({
+            target: `${obPackageId}::ob_kiosk::p2p_transfer`,
+            typeArguments: [objectType],
+            arguments: [
+              tx.object(kioskId),
+              tx.object(recipientKioskId),
+              tx.pure(objectId),
+            ],
+          });
+        } else {
+          tx.moveCall({
+            target: `${obPackageId}::ob_kiosk::p2p_transfer_and_create_target_kiosk`,
+            typeArguments: [objectType],
+            arguments: [tx.object(kioskId), tx.pure(to), tx.pure(objectId)],
+          });
+        }
+        return signer.signAndExecuteTransactionBlock(
+          {
+            transactionBlock: tx,
+            options: {
+              showInput: true,
+              showEffects: true,
+              showEvents: true,
+            },
+          },
+          clientIdentifier
+        );
+      }
+      throw new Error("Failed to transfer object");
+    },
+  });
 }
 ```

@@ -21,3 +21,7 @@ session은 메모리에 local은 디스크에 저장이 된다.
 그래서 브라우저가 꺼지거나 삭제된다면 세션 스토리지는 리셋됨
 
 https://techblog.woowahan.com/5900/
+
+# 스토리지 api공식 독스
+
+https://developer.chrome.com/docs/extensions/reference/storage/
