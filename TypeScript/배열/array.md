@@ -85,6 +85,18 @@ const testList = revertedAccount.map((item) => ({
 
 ```ts
 const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
+
+const uniqueReceivers = [
+  ...new Set(
+    arr.map((receiverIBC) =>
+      JSON.stringify({
+        chain: receiverIBC.chain,
+        channel: receiverIBC.channel,
+        port: receiverIBC.port,
+      })
+    )
+  ),
+].map((str) => JSON.parse(str));
 ```
 
 # 배열 합산
