@@ -66,3 +66,22 @@ export const ObjectDescriptionTextContainer = styled("div")(({ theme }) => ({
 ```
 
 child 간격 고려해서 반응형으로 말줄임 관련해서 읽어볼만한: https://taegon.kim/archives/10549
+
+# 여러줄인 텍스트 말줄임
+
+```tsx
+export const DescriptionContainer = styled("div")(({ theme }) => ({
+  color: theme.colors.base02,
+
+  // 맥스 줄 수
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: "vertical",
+
+  width: "100%",
+  display: "-webkit-box",
+
+  wordWrap: "break-word",
+
+  overflow: "hidden",
+}));
+```
