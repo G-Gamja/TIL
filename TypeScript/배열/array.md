@@ -85,6 +85,18 @@ const testList = revertedAccount.map((item) => ({
 
 ```ts
 const origins = Array.from(new Set(allowedOrigins.map((item) => item.origin)));
+
+const uniqueReceivers = [
+  ...new Set(
+    arr.map((receiverIBC) =>
+      JSON.stringify({
+        chain: receiverIBC.chain,
+        channel: receiverIBC.channel,
+        port: receiverIBC.port,
+      })
+    )
+  ),
+].map((str) => JSON.parse(str));
 ```
 
 # 배열 합산
@@ -326,3 +338,16 @@ testArrayList.at(-1);
 # 깊은 복사와 얕은 복사
 
 https://bbaktaeho-95.tistory.com/37
+
+# 배열 복사(깊은 복사)
+
+기존의 sort메서드는 호출한 객체의 데이터를 직접 조작함
+
+이 메서드들은 복사한 값을 사용함
+
+```ts
+Array.prototype.toReversed() -> Array
+Array.prototype.toSorted(compareFn) -> Array
+Array.prototype.toSpliced(start, deleteCount, ...items) -> Array
+Array.prototype.with(index, value) -> Array
+```

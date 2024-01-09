@@ -368,3 +368,11 @@ https://stackoverflow.com/questions/44806135/why-no-return-await-vs-const-x-awai
 # Promise 와 async,await차이
 
 https://velog.io/@pilyeooong/Promise%EC%99%80-asyncawait-%EC%B0%A8%EC%9D%B4%EC%A0%90
+
+# 비동기 함수 호출 시 void, await차이
+
+void는 실행 결과를 기다리지 않고 그냥 실행만 시켜놓고 줄이 끝나버림
+반면에 await는 실행 결과를 기다리고 줄이 끝나지 않음
+
+예로 try catch finally구문에서 void줄은 바로 끝나서 실행결과 기다리지도 않고 finally로 넘어가는데
+await은 결과 기달리니까 그 줄에 계속 멈춰있게되는거임

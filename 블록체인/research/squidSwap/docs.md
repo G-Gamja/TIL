@@ -153,6 +153,12 @@ When infiniteApproval is false, the Squid SDK will approve only the amount neces
 
 https://docs.widget.squidrouter.com/gas-fees-and-refunds
 
+## Referrer fee
+
+1inch와 같이 수수료 공유 프로그램을 제공하고 있음
+
+https://docs.squidrouter.com/squid-v1-docs-cosmos/sdk/collect-fees
+
 # 수신 체인에서 가스 price가 스파이크를 치는 경우
 
 수신체인에서 갑자기 수수료가 스파이크를 치는 경우 tx가 stuck될 수 있는데
