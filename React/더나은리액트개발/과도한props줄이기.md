@@ -141,3 +141,13 @@ function ExampleWithSlots() {
   );
 }
 ```
+
+# Headless Components
+
+참조: https://martinfowler.com/articles/headless-component.html
+
+# Compound Components
+
+https://velog.io/@rjsdnql123/%EC%BB%B4%ED%8C%8C%EC%9A%B4%EB%93%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%9E%80
+
+참고로 컴파운드 컴포넌트는 헤드리스 컴포넌트 중 하나임
