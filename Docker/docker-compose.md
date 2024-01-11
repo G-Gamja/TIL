@@ -1,0 +1,1 @@
+https://nstgic3.tistory.com/entry/%EB%8F%84%EC%BB%A4%EB%A1%9C-MySQL-%EC%84%A4%EC%B9%98%ED%95%98%EA%B3%A0-%EC%A0%91%EC%86%8D%ED%95%98%EA%B8%B0-MySQLWorkBench%EB%A1%9C-%EA%B4%80%EB%A6%AC
