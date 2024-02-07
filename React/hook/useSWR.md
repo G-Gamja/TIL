@@ -251,3 +251,225 @@ const { data, isValidating, error, mutate } = useSWR<
 // hasTimedOut를 기점으로 에러처리를 하면 되는 거야
 return { data, isValidating, error, hasTimedOut, mutate };
 ```
+
+# 페이지네이션(Pagination)
+
+```ts
+function Page({ index }) {
+  const { data } = useSWR(`/api/data?page=${index}`, fetcher);
+
+  // ... 로딩 및 에러 상태를 처리
+
+  return data.map((item) => <div key={item.id}>{item.name}</div>);
+}
+
+function App() {
+  const [pageIndex, setPageIndex] = useState(0);
+
+  return (
+    <div>
+      <Page index={pageIndex} />
+      <button onClick={() => setPageIndex(pageIndex - 1)}>Previous</button>
+      <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
+    </div>
+  );
+}
+```
+
+SWR의 캐시를 활용해서 프리로드 하는 방법
+
+```ts
+function App() {
+  const [pageIndex, setPageIndex] = useState(0);
+
+  return (
+    <div>
+      <Page index={pageIndex} />
+      <div style={{ display: "none" }}>
+        <Page index={pageIndex + 1} />
+      </div>
+      <button onClick={() => setPageIndex(pageIndex - 1)}>Previous</button>
+      <button onClick={() => setPageIndex(pageIndex + 1)}>Next</button>
+    </div>
+  );
+}
+```
+
+# 동적인 수의 요청하는 방법(커서 기반의 API)
+
+이런식으로 동적으로 api콜을 해야하는 경우(페이지네이션)일때 반복문을 사용 못한다.
+
+```ts
+for (let i = 0; i < cnt; i++) {
+  // 🚨 여기가 잘못되었습니다! 일반적으로 반복문 내에 hook을 사용할 수 없습니다.
+  const { data } = useSWR(`/api/data?page=${i}`);
+  list.push(data);
+}
+```
+
+이런 `커서` 기반의 API는 어떻게 처리하는가?
+
+```json
+        {
+            "data": {
+                "objectId": "0x734767e43c0fc0d4319d1065bb736c461b7ec9192bb96115c175fc71123a8755",
+                "version": "5031706",
+                "digest": "AWEamhfqchhMfHpZMEYCoLGgaz1Ry2aWUSZ5Wwg9QV4B"
+            }
+        },
+        {
+            "data": {
+                "objectId": "0x8e9a40e21b0be9f8e3bfe4b415217affa080646030c822a7d5acecc42a5f4bbf",
+                "version": "2251335",
+                "digest": "3oVKMjfQczjuJonLkXkMJj3ysxzt9oERZzVnZcygXgqZ"
+            }
+        },
+        {
+            "data": {
+                "objectId": "0x8ec42f2580dd437275e1a7f9f2ca126ba45cb894061fdfb5e76c9fce9adf8655",
+                "version": "33989242",
+                "digest": "2oC52CbrnMTn13CoPhMa9ExCfR82eT6E1F7khZ6XfGgt"
+            }
+        }
+    ],
+    "nextCursor": "0x8ec42f2580dd437275e1a7f9f2ca126ba45cb894061fdfb5e76c9fce9adf8655",
+    "hasNextPage": true
+}
+```
+
+# Promise.all을 사용하는 방법
+
+!주의 이렇게 multi fetcher를 useMemo에 감아서 사용하면 충돌나서 fetching 시도를 안함
+
+```ts
+export function useGetObjectsSWR(
+  { network, objectIds, options }: UseGetObjectsSWRProps,
+  config?: SWRConfiguration
+) {
+  const { currentSuiNetwork } = useCurrentSuiNetwork();
+
+  const { rpcURL } = network || currentSuiNetwork;
+
+  const fetcher = async (params: FetchParams) => {
+    try {
+      return await post<GetObjectsResponse>(params.url, {
+        jsonrpc: "2.0",
+        method: params.method,
+        params: [
+          [...params.objectIds],
+          {
+            ...params.options,
+          },
+        ],
+        id: params.objectIds[0],
+      });
+    } catch (e) {
+      if (isAxiosError(e)) {
+        if (e.response?.status === 404) {
+          return null;
+        }
+      }
+      throw e;
+    }
+  };
+
+  // NOTE 이렇게 multi fetcher를 useMemo에 감아서 사용하면 충돌나서 fetching 시도를 안함
+  const muliFetcherParams = useMemo(
+    () =>
+      objectIds.map((item) => ({
+        url: rpcURL,
+        objectIds: item,
+        options,
+        method: "sui_multiGetObjects",
+      })),
+    [objectIds, options, rpcURL]
+  );
+
+  const multiFetcher = (params: MultiFetcherParams) =>
+    Promise.all(params.map((item) => fetcher(item)));
+
+  const { data, error, mutate } = useSWR<
+    (GetObjectsResponse | null)[],
+    AxiosError
+  >(muliFetcherParams, multiFetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 14000,
+    refreshInterval: 15000,
+    errorRetryCount: 0,
+    isPaused: () => !objectIds,
+    ...config,
+  });
+
+  return { data, error, mutate };
+}
+```
+
+이렇게 사용하자
+
+```ts
+...
+
+export function useGetObjectsSWR({ network, objectIds, options }: UseGetObjectsSWRProps, config?: SWRConfiguration) {
+  const { currentSuiNetwork } = useCurrentSuiNetwork();
+
+  const { rpcURL } = network || currentSuiNetwork;
+
+  const fetcher = async (params: FetchParams) => {
+    try {
+      return await post<GetObjectsResponse>(params.url, {
+        jsonrpc: '2.0',
+        method: params.method,
+        params: [
+          [...params.objectIds],
+          {
+            ...params.options,
+          },
+        ],
+        id: params.objectIds[0],
+      });
+    } catch (e) {
+      if (isAxiosError(e)) {
+        if (e.response?.status === 404) {
+          return null;
+        }
+      }
+      throw e;
+    }
+  };
+
+  const multiFetcher = (param: MultiFetcherParams) =>
+    Promise.all(
+      param.objectIds.map((item) => {
+        const fetcherParam = {
+          url: param.url,
+          objectIds: item,
+          options: param.options,
+          method: param.method,
+        };
+
+        return fetcher(fetcherParam);
+      }),
+    );
+
+  const { data, error, mutate } = useSWR<(GetObjectsResponse | null)[], AxiosError>(
+    {
+      url: rpcURL,
+      objectIds,
+      options,
+      method: 'sui_multiGetObjects',
+    },
+    multiFetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 14000,
+      refreshInterval: 15000,
+      errorRetryCount: 0,
+      isPaused: () => !objectIds.length,
+      ...config,
+    },
+  );
+
+  return { data, error, mutate };
+}
+
+```
