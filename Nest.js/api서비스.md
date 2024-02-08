@@ -86,3 +86,5 @@ docker build -f Dockerfiles/service.Dockerfile .
   REPOSITORY TAG IMAGE ID CREATED SIZE
   cosmostation/api-service local-test 83954de439c4 8 minutes ago 4.06GB
   이렇게 바뀜
+
+TODO 이미지 빌드까지 했고 도커 컴포즈로 실행시키고 있는중 docker-compose up이거 쳐서 이어서 하면 됨
