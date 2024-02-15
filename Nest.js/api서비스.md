@@ -88,3 +88,9 @@ docker build -f Dockerfiles/service.Dockerfile .
   이렇게 바뀜
 
 TODO 이미지 빌드까지 했고 도커 컴포즈로 실행시키고 있는중 docker-compose up이거 쳐서 이어서 하면 됨
+
+- docker-compose up 실행 -> 에러 발생
+
+  - docker-compose.yml파일에 있는 이미지 이름이랑 빌드한 이미지 이름이랑 다름 -> 빌드한 이미지 태그명으로 변경
+
+- docker-compose up 했더니 도커 로그인하라고 나옴
