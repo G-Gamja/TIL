@@ -17,3 +17,4 @@
 11. await와 try catch 문 둘 다 관련성 확인해볼것
     - await와 void 차이점
 12. 한 훅 내에서 다른 훅을 사용한 값을 사용할 때 쓰이는 훅에 서스펜스를 걸어야하나 안하나...
+13. headless component, radix ui, shacdn ui, 컴파운드 컴포넌트 패턴
