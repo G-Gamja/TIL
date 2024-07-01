@@ -1,6 +1,7 @@
 # AbortSignal
 
 관련 문서: https://developer.mozilla.org/ko/docs/Web/API/AbortSignal
+api에 대해서 작성된 예시들: https://dev.to/rashidshamloo/adding-timeout-and-multiple-abort-signals-to-fetch-typescriptreact-33bb
 
 예시 코드
 
@@ -88,6 +89,21 @@ export async function get<T>(URL: string) {
 }
 ```
 
-```ts
+## 엑시오스에서 타임아웃 설정
 
+```ts
+export async function get<T>(
+  path: string,
+  config?: AxiosRequestConfig
+): Promise<T> {
+  const { data } = await axios.get<T>(path, {
+    ...config,
+    headers: {
+      Cosmostation: `extension/${String(process.env.VERSION)}`,
+      ...config?.headers,
+    },
+    timeout: 5000,
+  });
+  return data;
+}
 ```
