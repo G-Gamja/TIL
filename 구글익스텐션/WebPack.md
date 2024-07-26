@@ -101,3 +101,23 @@ fullySpecified: false,
 },
 ],
 },
+
+## 웹팩 빌드
+
+``` json
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+    plugins: [new TsconfigPathsPlugin()],
+    fallback: {
+      stream: 'stream-browserify',
+      assert: 'assert',
+      os: 'os-browserify',
+      url: 'url',
+      http: 'stream-http',
+      https: 'https-browserify',
+      crypto: 'crypto-browserify',
+    },
+  },
+```
+
+이라면 웹팩이 빌드할때 프로젝트에서 사용된 stream패키지 뿐만 아니라 설치한 패키지에서 사용되는 stream패키지도 stream-browserify로 대체해준다.
