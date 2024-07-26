@@ -49,3 +49,59 @@ readStream.on("error", (err) => {
 - **시간 효율성**: 데이터를 조각으로 나누어 바로 처리할 수 있기 때문에, 전체 데이터를 처리하기 전에 작업을 시작할 수 있어 시간을 절약할 수 있습니다.
 
 Node.js에서 Stream을 사용하면, 대규모 데이터 처리 작업을 더 효율적으로 관리할 수 있습니다.
+
+Stream Piping
+pipe 메서드를 사용하면 여러 스트림을 연결하여 데이터를 쉽게 전달할 수 있습니다. 예를 들어, 읽기 스트림에서 쓰기 스트림으로 데이터를 파이핑할 수 있습니다.
+
+```js
+const readStream = fs.createReadStream("./example.txt");
+const writeStream = fs.createWriteStream("./exampleCopy.txt");
+
+readStream.pipe(writeStream);
+```
+
+Backpressure Handling
+스트림에서 역압(backpressure)은 소비자가 데이터를 충분히 빨리 처리하지 못할 때 발생합니다. 이를 처리하기 위해 pause()와 resume() 메서드를 사용할 수 있습니다.
+
+```js
+const readStream = fs.createReadStream("./example.txt");
+
+readStream.on("data", (chunk) => {
+  if (!writeStream.write(chunk)) {
+    readStream.pause();
+  }
+});
+
+writeStream.on("drain", () => {
+  readStream.resume();
+});
+```
+
+Custom Streams
+기본 스트림 클래스를 확장하여 사용자 정의 스트림을 만들 수 있습니다. 예를 들어, Transform 스트림을 확장하여 데이터를 대문자로 변환하는 스트림을 만들 수 있습니다.
+
+```js
+const { Transform } = require("stream");
+
+class UpperCaseTransform extends Transform {
+\_transform(chunk, encoding, callback) {
+this.push(chunk.toString().toUpperCase());
+callback();
+}
+}
+
+const upperCaseTransform = new UpperCaseTransform();
+process.stdin.pipe(upperCaseTransform).pipe(process.stdout);
+```
+
+Stream Methods
+스트림 인스턴스에서 사용할 수 있는 중요한 메서드는 다음과 같습니다:
+
+pipe(): 스트림을 다른 스트림에 연결합니다.
+unpipe(): 스트림의 연결을 해제합니다.
+read(): 데이터를 읽습니다.
+write(): 데이터를 씁니다.
+end(): 스트림을 종료합니다.
+pause(): 스트림을 일시 중지합니다.
+resume(): 일시 중지된 스트림을 다시 시작합니다.
+이러한 메서드를 사용하면 스트림을 더욱 유연하고 강력하게 사용할 수 있습니다.
