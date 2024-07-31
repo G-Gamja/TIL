@@ -121,3 +121,51 @@ fullySpecified: false,
 ```
 
 이라면 웹팩이 빌드할때 프로젝트에서 사용된 stream패키지 뿐만 아니라 설치한 패키지에서 사용되는 stream패키지도 stream-browserify로 대체해준다.
+
+## 플러그인
+
+### fork-ts-checker-webpack-plugin
+
+`fork-ts-checker-webpack-plugin`은 TypeScript와 Webpack을 함께 사용할 때 유용한 플러그인입니다. 이 플러그인은 TypeScript 타입 체크와 ESLint 검사를 별도의 프로세스에서 수행하여 Webpack 빌드 속도를 향상시킵니다.
+
+### 주요 기능
+1. **타입 체크**: TypeScript 컴파일러를 사용하여 타입 검사를 수행합니다.
+2. **ESLint 검사**: ESLint를 사용하여 코드 품질 검사를 수행합니다.
+3. **병렬 처리**: 타입 체크와 ESLint 검사를 별도의 프로세스에서 수행하여 Webpack 빌드와 병렬로 처리합니다.
+4. **빠른 피드백**: 타입 오류와 ESLint 오류를 빠르게 피드백하여 개발 생산성을 높입니다.
+
+### 설치 방법
+```bash
+npm install fork-ts-checker-webpack-plugin --save-dev
+```
+
+### 사용 예시
+다음은 `webpack.config.js` 파일에서 `fork-ts-checker-webpack-plugin`을 설정하는 예시입니다:
+
+```javascript
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+module.exports = {
+  // ... 다른 설정들 ...
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true // 타입 체크를 플러그인에 위임
+        },
+        exclude: /node_modules/
+      }
+    ]
+  },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin()
+  ],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  }
+};
+```
+
+이 설정은 `ts-loader`를 사용하여 TypeScript 파일을 트랜스파일하고, `fork-ts-checker-webpack-plugin`을 사용하여 타입 체크와 ESLint 검사를 별도의 프로세스에서 수행합니다. `transpileOnly: true` 옵션을 설정하여 `ts-loader`가 타입 체크를 생략하고 트랜스파일만 수행하도록 합니다.
