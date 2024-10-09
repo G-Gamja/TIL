@@ -268,6 +268,34 @@ Promise.all은 요청 중에 하나라도 요청 거부가 되면 성공한 객�
 
 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 
+## @supercharge/promise-pool로 더 개선된 Promise.all()처리하기
+
+https://www.npmjs.com/package/@supercharge/promise-pool
+
+```javascript
+const { PromisePool } = require("@supercharge/promise-pool");
+
+const { results, errors } = await PromisePool.for(urls)
+  .withConcurrency(5)
+  .process(async (url) => {
+    const response = await fetch(url);
+    return response.json();
+  });
+```
+
+Promise.all은 작업들을 chunk로 나눠서 처리하는데 이때 각 청크당 해결되는 시간은 청크 내에서 가장 오래 걸리는 작업의 시간이다.
+그래서 하나가 작업이 오래 걸렸을때 다음 청크로 못넘어가기때문에 비효율적인 부분이 생기는데 이걸 해결하기 위해 @supercharge/promise-pool을 사용한다.
+
+![ast](/images/promispool_1.png)
+
+원래 하나의 청크에 50개의 작업이 있었다고 한다면 작업 레일이 50개가 있다고 치고, 하나의 작업이 끝나면 해당 레일에 다른 작업을 올려서 작업을 이어나가도록 하는 것이다.
+
+![ast](/images/promise_pool_2.png)
+
+이거는 근데 작업별 소요 시간의 편차가 클 때 효과적이다.
+
+왜 사용하는지에대한 참고: https://jojoldu.tistory.com/714
+
 # Promise.allSettled
 
 사용 예

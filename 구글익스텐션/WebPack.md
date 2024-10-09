@@ -1,3 +1,30 @@
+📌 Babel이란?
+바벨(Babel)이란, 입력과 출력이 모두 자바스크립트 코드인 컴파일러입니다. 바벨은 최신 버전의 자바스크립트가 실행되지 않는 구 버전의 브라우저에서도 정상적으로 실행되도록 변환해줍니다. (최신 버전의 JavaScript 코드를 ES5버전의 코드로 바꿔주는 Node.js패키지) 현재는 바벨을 이용하여 JSX 문법, 타입스크립트(TypeScript)와 같은 정적타입의 언어와 코드 압축 등의 문법을 사용할 수 있습니다.
+
+babel을 쓰는 이유
+크로스 브라우징
+JavaScript (ES6) -> JavaScript(ES5)로 변환해줍니다. (브라우저 하위 호환성을 생각)
+각 브라우저마다 JavaScript 엔진이 다르지만, 모든 브라우저에서 동작하도록 호환성을 지켜줍니다.
+폴리필(polyfill)
+폴리필은 개발자가 특정 기능이 지원되지 않는 브라우저를 위해 사용할 수 있는 코드 조각이나 플러그인을 의미합니다.
+폴리필은 프로그램이 처음에 시작될 때 현재 브라우저에서 지원하지 않는 함수를 검사해서 각 object의 prototype에 붙여주는 역할을 합니다.
+
+📌 Webpack이란?
+Webpack은 모듈 번들러입니다. 모듈 번들러란 웹 애플리케이션을 구성하는 자원(HTML, CSS, JavaScript, Image 등)을 각각의 모듈로 보고 이를 조합해서 하나의 결과물을 만드는 도구를 의미합니다.
+
+Webpack을 쓰는 이유
+모듈간 의존성 문제 해결
+웹팩이 모듈간의 의존성을 계산하여 번들링해줍니다.
+네트워크 병목을 줄여줌
+
+<script> 태그를 여러개 쓰면 네트워크 병목현상이 생길 수 있습니다. 이런 문제를 해결하기 위해 하나의 js파일로 로드하면 됩니다. 그러나 실제로 코드를 하나의 js파일에 작성하면 가독성이나 전역공간의 오염 문제가 발생하게 되므로 웹팩을 써서 여러개의 파일을 하나로 묶어주는 방법을 사용합니다.
+모듈단위의 개발 가능
+가독성, 유지보수 효율을 높입니다. 스코프를 신경쓰지 않고, 라이브러리간 종속 문제를 고민할 필요가 없습니다. (웹팩이 계산)
+코드 압축, 최적화
+es6+ 스크립트 지원
+바벨로더로 바벨 사용
+
+
 https://wikidocs.net/160308
 
 이거를 추천함
@@ -74,3 +101,71 @@ fullySpecified: false,
 },
 ],
 },
+
+## 웹팩 빌드
+
+``` json
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+    plugins: [new TsconfigPathsPlugin()],
+    fallback: {
+      stream: 'stream-browserify',
+      assert: 'assert',
+      os: 'os-browserify',
+      url: 'url',
+      http: 'stream-http',
+      https: 'https-browserify',
+      crypto: 'crypto-browserify',
+    },
+  },
+```
+
+이라면 웹팩이 빌드할때 프로젝트에서 사용된 stream패키지 뿐만 아니라 설치한 패키지에서 사용되는 stream패키지도 stream-browserify로 대체해준다.
+
+## 플러그인
+
+### fork-ts-checker-webpack-plugin
+
+`fork-ts-checker-webpack-plugin`은 TypeScript와 Webpack을 함께 사용할 때 유용한 플러그인입니다. 이 플러그인은 TypeScript 타입 체크와 ESLint 검사를 별도의 프로세스에서 수행하여 Webpack 빌드 속도를 향상시킵니다.
+
+### 주요 기능
+1. **타입 체크**: TypeScript 컴파일러를 사용하여 타입 검사를 수행합니다.
+2. **ESLint 검사**: ESLint를 사용하여 코드 품질 검사를 수행합니다.
+3. **병렬 처리**: 타입 체크와 ESLint 검사를 별도의 프로세스에서 수행하여 Webpack 빌드와 병렬로 처리합니다.
+4. **빠른 피드백**: 타입 오류와 ESLint 오류를 빠르게 피드백하여 개발 생산성을 높입니다.
+
+### 설치 방법
+```bash
+npm install fork-ts-checker-webpack-plugin --save-dev
+```
+
+### 사용 예시
+다음은 `webpack.config.js` 파일에서 `fork-ts-checker-webpack-plugin`을 설정하는 예시입니다:
+
+```javascript
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+module.exports = {
+  // ... 다른 설정들 ...
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true // 타입 체크를 플러그인에 위임
+        },
+        exclude: /node_modules/
+      }
+    ]
+  },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin()
+  ],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  }
+};
+```
+
+이 설정은 `ts-loader`를 사용하여 TypeScript 파일을 트랜스파일하고, `fork-ts-checker-webpack-plugin`을 사용하여 타입 체크와 ESLint 검사를 별도의 프로세스에서 수행합니다. `transpileOnly: true` 옵션을 설정하여 `ts-loader`가 타입 체크를 생략하고 트랜스파일만 수행하도록 합니다.
