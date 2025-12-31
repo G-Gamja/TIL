@@ -1,0 +1,1 @@
+https://www.frontoverflow.com/magazine/23
