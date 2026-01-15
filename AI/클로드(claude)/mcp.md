@@ -1,0 +1,2 @@
+- 하이퍼브라우저: https://www.hyperbrowser.ai/docs/home
+    - 웹 스크랩핑
